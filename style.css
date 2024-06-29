@@ -1,0 +1,75 @@
+
+@keyframes scroll-bg {
+    0% {
+        transform: translate(0%, -3%) perspective(200px) rotate(15deg) scale(1.4);
+    }
+    50% {
+        transform: translate(2%, -1%) perspective(50px) rotate(10deg) scale(1.1);
+    }
+    60% {
+        transform: translate(2%, -1%) perspective(0px) rotate(12deg) scale(1.1);
+    }    
+    100% {
+        transform: translate(0%, -3%) perspective(200px) rotate(15deg) scale(1.4);
+    }
+
+
+}
+body { background:#111;}
+body {
+   --fg: #111;
+}
+.bodyrun {
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 150%;
+   height: 150%;
+   background: 
+        0px 0 / 200px 200px no-repeat url('pb/demo-image/0.jpg'), 
+        220px 20px / 200px 200px no-repeat url('pb/demo-image/1.jpg'), 
+        440px 0px / 200px 200px no-repeat url('pb/demo-image/2.jpg'), 
+        660px 20px / 200px 200px no-repeat url('pb/demo-image/3.jpg'), 
+        880px 0px / 200px 200px no-repeat url('pb/demo-image/4.jpg'), 
+        1100px 20px / 200px 200px no-repeat url('pb/demo-image/5.jpg'),
+        1310px 0px / 200px 200px no-repeat url('pb/demo-image/c.jpg'),
+        
+        0px 220px / 200px 200px no-repeat url('pb/demo-image/6.jpg'), 
+        220px 220px / 200px 200px no-repeat url('pb/demo-image/7.jpg'), 
+        440px 220px / 200px 200px no-repeat url('pb/demo-image/8.jpg'), 
+        660px 240px / 200px 200px no-repeat url('pb/demo-image/9.jpg'), 
+        880px 220px / 200px 200px no-repeat url('pb/demo-image/a.jpg'), 
+        1100px 240px / 200px 200px no-repeat url('pb/demo-image/b.jpg'), 
+        1310px 220px / 200px 200px no-repeat url('pb/demo-image/d.jpg'),
+
+        0px 440px / 200px 200px no-repeat url('pb/demo-image/e.jpg'), 
+        220px 460px / 200px 200px no-repeat url('pb/demo-image/c.jpg'), 
+        440px 440px / 200px 200px no-repeat url('pb/demo-image/f.jpg'), 
+        660px 460px / 200px 200px no-repeat url('pb/demo-image/g.jpg'), 
+        880px 440px / 200px 200px no-repeat url('pb/demo-image/h.jpg'), 
+        1100px 460px / 200px 200px no-repeat url('pb/demo-image/1.jpg'), 
+        1310px 460px / 200px 200px no-repeat url('pb/demo-image/2.jpg'),
+
+        0px 660px / 200px 200px no-repeat url('pb/demo-image/0.jpg'), 
+        220px 680px / 200px 200px no-repeat url('pb/demo-image/1.jpg'), 
+        440px 660px / 200px 200px no-repeat url('pb/demo-image/2.jpg'), 
+        660px 680px / 200px 200px no-repeat url('pb/demo-image/3.jpg'), 
+        880px 660px / 200px 200px no-repeat url('pb/demo-image/4.jpg'), 
+        1100px 680px / 200px 200px no-repeat url('pb/demo-image/5.jpg'),
+        1310px 660px / 200px 200px no-repeat url('pb/demo-image/c.jpg'),      
+      
+        var(--fg);
+   opacity:.5;
+   transform: rotate(8deg) scale(1.1);
+   animation: scroll-bg 120s linear infinite;
+   z-index: -1;
+}
+
+.welcome {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
