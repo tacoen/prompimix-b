@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charSet="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
+<link rel="stylesheet" href="/ge2/css/ge2-color.css" type="text/css" media="all">
+<link rel="stylesheet" href="/ge2/css/ge2.css" type="text/css" media="all">
+<script src="/ge2/js/microns-f.js"></script>
+<script src='/ge2/js/tafunc.js'></script>
+<link rel="stylesheet" href="pb.css" type="text/css" media="all">
+<title>Prompimix B</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<style id='tcanstyles'></style>
+</head>
+<body class='scrollable'>
+<div class='flex w100'>
+<div id='prompts' class='w25 fix top left transfer maxheight'>
+<header class='flex vertical w25 fix top left'>
+<div class='tools pl flex between middle w100 grow'>
+<h1 onclick='location.reload()'>Prompimix</h1>
+<div>
+<button class='naked' data-content='workspace'>
+<i data-icon="feather-layout"></i>
+</button>
+<button class='naked' data-content='datajson'>
+<i data-icon="feather-database"></i>
+</button>
+<button class='naked' data-content='setting' onclick='tcan()'>
+<i data-icon="feather-sliders"></i>
+</button>
+</div>
+</div>
+<div class='w100 pa grow'>
+<input type="text" id="search-input" placeholder="Search...">
+</div>
+</header>
+<!--accordion here -->
+</div>
+<main class='w75 ls25'>
+<div id='landing' class='content pa2' data-fetch='info.html'></div>
+<div id='workspace' class='content hide'>
+<nav id='pb' class='w75 flex fix top'>
+<div class='input-group'>
+<select onchange='pb_load(this)' id="projects" name="project" class='naked'>
+<option>default</option>
+</select>
+<button class='save' onclick='pb_save(this)'>
+<i data-icon='feather-save' class='ml'></i>
+</button>
+</div>
+<ul class="tab-menu w100 mb3 flex end">
+<li data-tab="maker" class="tab active">prompt</li>
+<li data-tab="negative" class="tab">negative</li>
+<li data-tab="notes" class="tab">notes</li>
+</ul>
+</nav>
+<div class='tab-content'>
+<div class='tab show' id='maker'>
+<div class='item new'>
+<nav class='flex between middle'>
+<div class='flex grow middle'>
+<button class='naked add' onclick='pb_keep(this)' title='add'>
+<i data-icon='plus'></i>
+</button>
+<span class='name line' contenteditable='true'>---</span>
+</div>
+<div class='flex middle'>
+<button class='naked twed' onclick="formatSelectedText(this)">
+<i data-icon='scale'></i>
+</button>    
+<button class='naked trim' onclick='pb_breaks(this)' title='clean'>
+<i data-icon='bars'></i>
+</button>
+<button class='naked trim' onclick='pb_trim(this)' title='clean'>
+<i data-icon='align-left'></i>
+</button>
+<button class='naked copy' onclick='pb_copy(this)' title='copy prompt'>
+<i data-icon='copy'></i>
+</button>
+</div>
+</nav>
+<div class='entry text' contenteditable='true'></div>
+</div>
+<div class='archive'></div>
+</div>
+<div class='tab ' id='negative'>
+<div class='item new'>
+<nav class='flex between middle'>
+<div class='flex grow middle'>
+<button class='naked add' onclick='pb_keep(this)' title='add'>
+<i data-icon='plus'></i>
+</button>
+<span class='name line' contenteditable='true'>---</span>
+</div>
+<div class='flex middle'>
+<button class="naked unique" onclick="pb_unique(this)" title="unique">
+<i data-icon="contract"></i>
+</button>
+<button class='naked trim' onclick='pb_breaks(this)' title='line-break'>
+<i data-icon='bars'></i>
+</button>
+<button class='naked trim' onclick='pb_trim(this)' title='clean'>
+<i data-icon='align-left'></i>
+</button>
+<button class='naked copy' onclick='pb_copy(this)' title='copy prompt'>
+<i data-icon='copy'></i>
+</button>
+</div>
+</nav>
+<div class='entry text' contenteditable='true'></div>
+</div>
+<div class='archive'></div>
+</div>
+<div class='tab' id='notes'>
+<div class='text note thin-scrollable' contenteditable='true'></div>
+<p>
+<small>
+<b>HTML</b>
+are Welcome, also image pasting.
+</small>
+</p>
+</div>
+</div>
+</div>
+<!-- workspace --->
+<div id='datajson' class='content hide' spellcheck="false">
+<header>
+<h3 class='title'>JSON File</h3>
+</header>
+<div class='flex w100'>
+<div class='flex w50 middle warp filebox'>
+<div>
+<i class='red x2' data-icon='feather-database'></i>
+</div>
+<div class='ml2 flex vertical'>
+<b>Prompts</b>
+<div>
+<a href='javascript:prompt_save(true)'>
+<i data-icon="download"></i>
+Download
+</a>
+<a class='right' href='javascript:importJSON("prompts")'>
+Import<i data-icon="upload"></i>
+</a>
+</div>
+</div>
+</div>
+<div class='flex w50 middle warp filebox'>
+<div>
+<i class='green x2' data-icon='feather-layout'></i>
+</div>
+<div class='ml2 flex vertical'>
+<b>Workspace</b>
+<div>
+<a href='javascript:workspace_save(true)'>
+<i data-icon="download"></i>
+Download
+</a>
+<a class='right' href='javascript:importJSON("workspace")'>
+Import<i data-icon="upload"></i>
+</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!--datajson-->
+<div id='setting' class='content hide' spellcheck="false">
+<header><h3 class='title'>Setting</h3></header>
+<div class='flex'>
+    <div class='tcan'>
+<p>
+<label for="bg-input">background</label>
+<input type="color" id="bg-input" value="#223344">
+</p>
+<p>
+<label for="fg-input">text</label>
+<input type="color" id="fg-input" value="#dddddd">
+</p>
+<p>
+<label for="act-input">accent</label>
+<input type="color" id="act-input" value="#c3d3ef">
+</p>
+<p>
+<label for="pbg-input">Button</label>
+<input type="color" id="pbg-input" value="#447799">
+</p>
+<p>
+<label for="b6-input">Interface</label>
+<input type="color" id="b6-input" value="#666666">
+</p>      
+<p>
+<label for="b1-input">Active</label>
+<input type="color" id="b1-input" value="#225577">
+</p>
+<p>
+<label for="b2-input">Inactive</label>
+<input type="color" id="b2-input" value="#225577">
+</p>
+ 
+<p>
+<label for="nbg-input">header</label>
+<input type="color" id="nbg-input" value="#336699">
+</p>
+
+<p>
+<label for="b3-input">border</label>
+<input type="color" id="b3-input" value="#447799">
+</p>
+
+<p>
+<label for="bshade-input">shade</label>
+<input type="color" id="bshade-input" value="#000033">
+</p>
+<p>
+<label for="wshade-input">highlight</label>
+<input type="color" id="wshade-input" value="#333333">
+</p>
+<p class='submit'>
+<button id="save-theme">Save Theme</button>
+</p>
+</div>
+
+<div class='sample'>
+
+<div class="item new">
+<nav class="flex between middle">
+<div class="flex grow middle">
+<button class="naked" title="add">
+<svg class="taicomu plus" width="480px" height="480px" viewBox="0 0 480 480"><path d="M220 400l40 0 0-140 140 0 0-40-140 0 0-140-40 0 0 140-140 0 0 40 140 0 0 140z"></path></svg>
+</button>
+<span class="name line" contenteditable="true">zulu99</span>
+</div>
+<div class="flex middle">
+<button class="naked twed">
+<i data-icon="scale"></i></button>    
+
+<button class="naked trim accent" title="clean">
+<i data-icon="align-left"></i>
+</button>
+<button class="naked copy" title="copy prompt">
+    <i data-icon='copy'></i>
+</button>
+</div>
+</nav>
+<div class="entry text" contenteditable="true">8k, photo realistic, girl in golden suit, femme fatale</div>
+</div>
+
+<div class="archive"></div>
+
+
+
+    
+</div>
+    
+</div>
+<!--setting-->
+</main>
+<!--main-->
+<div id='htmlpart'>
+<div class='modal tl bg w60 pa2' modal='editpage' spellcheck="false" data-prompt>
+<button class='naked closer'>
+<i data-icon='cross'></i>
+</button>
+<h3 class='title'>Edit</h3>
+<div class="w100 mt4 flex warp">
+<div class="w100 vertical flex pr mb">
+<label for='promptfield'>prompt <small class="norm dim on-right">(doubeclick to rename/create new)</small></label>
+<input id='promptfield' type='text' onclick="enable_new(this)" value='' name='prompt' readonly class='w100'>    
+</div>    
+<div class="w50 vertical flex pr">
+<label for='prefix'>prefix</label>
+<input id='prefix' type='text' value='' name='prefix' class='w100'>
+</div>
+<div class="w50 pl vertical flex">
+<label for='suffix'>suffix</label>
+<input id='suffix' type='text' value='' name='suffix' class='w100'>
+</div>
+<div class="w100 vertical flex mt2">
+<label for='promptext'>prompt<small class="norm dim on-right">(empty to delete)</small></label>
+<textarea id='promptext' name='promptext'></textarea>
+</div>
+
+</div>
+<p>
+<button onclick='pb_editSave(this)' class='submit small'>Save</button>
+</p>
+</div>
+<div index='item'>
+<nav class="flex between middle">
+<div class="flex grow middle">
+<button class="naked delete" onclick="pb_delete(this)" title="delete">
+<i data-icon="cross"></i>
+</button>
+<span class="name line" contenteditable="true">---</span>
+</div>
+<button class="naked copy" onclick="pb_copy(this)" title="copy prompt">
+<i data-icon="copy"></i>
+</button>
+</nav>
+<div class="text"></div>
+</div>
+</div>
+<div id='overlay'></div>
+</body>
+<script src='pbv.js'></script>
+<script src='pb.js'></script>
+</html>

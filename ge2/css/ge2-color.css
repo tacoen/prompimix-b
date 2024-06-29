@@ -1,0 +1,25 @@
+:root,[theme='light']:root {
+	--orange: #ffcc33;
+	--red: #cc0000;
+	--blue: #336699;
+	--green: #33aa33;
+	--magenta: #bb33dd;
+	--cyan: #33ddbb;
+	--bg: #ecedee;
+	--fg: #111213;
+	--nbg: #d0d1d3;
+	--act:#c91111;
+}
+
+[theme='dark']:root {
+	--orange: #aa6622;
+	--red: #991111;
+	--blue: #4444aa;
+	--green: #239923;
+	--magenta: #aa22cc;
+	--cyan: #118899;
+	--bg: #111213;
+	--fg: #ececed;
+	--nbg: #2e2e2c;
+	--act:#a80000;	
+}

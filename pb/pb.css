@@ -1,0 +1,554 @@
+:root {
+    --fg: #222222;
+    --bg: #f3f3f3;
+    --nbg: #d1d1d1;
+    --pbg: #e2e2e2;
+    --b6: #34455;
+    --b5: #b1b1b1;
+    --b4: #f3f3f3;
+    --b2: #c1c1c1;
+    --b3: #b1b1b1;
+    --b1: #ffffff;
+    --act: #cc3344;
+    --bshade: #111111;
+    --wshade: #f1f1f1;
+}
+
+.background-tiles {
+    opacity: .2;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 150%;
+    height: 150%;
+    background: 0px 0 / 300px 375px no-repeat url('demo-image/1.webp'), 310px 0 / 300px 375px no-repeat url('demo-image/2.webp'), 620px 0 / 300px 375px no-repeat url('demo-image/3.webp'), 930px 0 / 300px 375px no-repeat url('demo-image/4.webp'), 1240px 0 / 300px 375px no-repeat url('demo-image/5.webp'), 1550px 0 / 300px 375px no-repeat url('demo-image/6.webp'), 0px 390px / 300px 375px no-repeat url('demo-image/3.webp'), 310px 390px / 300px 375px no-repeat url('demo-image/5.webp'), 620px 390px / 300px 375px no-repeat url('demo-image/1.webp'), 930px 390px / 300px 375px no-repeat url('demo-image/6.webp'), 1240px 390px / 300px 375px no-repeat url('demo-image/5.webp'), 1550px 390px / 300px 375px no-repeat url('demo-image/4.webp'), #000;
+    animation: scroll-bg 120s ease-out infinite;
+    z-index: -1;
+}
+
+@keyframes scroll-bg {
+    0% {
+        transform: translate(-10%,-20%) rotateX(-5deg) rotateZ(15deg)scale(1.1) ;
+    }
+
+    50% {
+        transform: translate(-3%,-3%) rotateX(2deg) rotateZ(0deg) scale(1.4);
+    }
+
+    100% {
+        transform: translate(-10%,-20%) rotateX(-5deg) rotateZ(15deg)scale(1.1);
+    }
+}
+
+body {
+    overflow-y: overlay;
+}
+
+button.active svg, button.active, button.accent svg, button.accent {
+    color: var(--act);
+    fill: var(--act) !important;
+}
+
+a {
+    color: var(--act);
+}
+
+dl.accordion {
+    margin: 0;
+    background: var(--bg);
+}
+
+dd ul {
+    padding: 0;
+    list-style-type: none;
+    font-size: .9em;
+    margin: 0;
+}
+
+dd ul li {
+    padding: .25rem var(--pad);
+    border-bottom: 1px dotted var(--b3);
+    cursor: pointer;
+    text-overflow: ellipsis;
+    text-wrap: nowrap;
+    text-spacing-trim: normal;
+    overflow: hidden;
+}
+
+dd ul li:hover {
+    padding: .25rem var(--pad);
+    border-bottom: 1px dotted var(--b3);
+    cursor: pointer;
+    background: #0001;
+}
+
+dd ul li:last-child {
+    border-bottom: none;
+}
+
+dt {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+dt b {
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    text-transform: capitalize;
+    flex-grow: 1;
+}
+
+#prompts {
+    --pad: .25rem;
+    font-size: 16px;
+    margin-top: 82px;
+    height: 100vh;
+    background: var(--nbg);
+}
+
+#data {
+    height: calc(100vh - 80px);
+    overflow-y: auto;
+    padding: 0 .5rem;
+}
+
+.bgshade {
+    background: var(--b2);
+}
+
+#prompts svg {
+    width: 18px;
+    height: 18px;
+}
+
+#prompts header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--pad);
+    padding-bottom: 0;
+    background: var(--nbg);
+}
+
+#prompts header > div {
+    display: flex;
+    align-items: center;
+    height: 40px;
+}
+
+#prompts h1 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 1em;
+    display: inline-flex;
+}
+
+#prompts header .edit-toggle svg {
+    width: 24px;
+    height: 24px;
+}
+
+nav#pb {
+    padding: var(--pad) var(--pad) 0 var(--pad);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* box-shadow: 0 4px 12px #fff; */
+}
+
+#workspace li.notice {
+    position: relative;
+}
+
+#workspace li.notice:after {
+    content: "9992";
+    position: absolute;
+    top: .3rem;
+    right: .25rem;
+    border-radius: 15%;
+    font-size: .6em;
+    height: 1.5em;
+    min-width: 1rem;
+    padding: 0 2px;
+    background-color: var(--blue);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--bg);
+}
+
+nav#pb div {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+nav#pb svg {
+    height: 16px;
+    width: 16px;
+}
+
+nav#pb button {
+    border: none;
+    background: transparent;
+}
+
+nav#pb input {
+    height: 24px;
+    line-height: 24px;
+    color: var(--fg);
+}
+
+.medium-screen nav#pb input {
+    width: 70%
+}
+
+nav#pb .input-group {
+    background: var(--bg);
+    color: var(--fg);
+    margin-bottom: .5rem;
+}
+
+.input-group {
+}
+
+.medium-screen nav#pb .input-group {
+    width: 70%
+}
+
+.medium-screen #workspace {
+    width: 50%
+}
+
+.medium-screen #prompts {
+    width: 50%
+}
+
+input#search-input {
+    font-size: .9em;
+    width: 100%;
+    line-height: 1.3;
+    padding: .25rem;
+    margin-bottom: .5rem;
+    background: var(--bg);
+    color: var(--fg);
+}
+
+#prompts dl.accordion dt.highlight {
+    background: #fff3;
+}
+
+#prompts .edit-toggle .panel-right {
+    display: none;
+}
+
+#prompts dt .options {
+    display: none;
+}
+
+header svg, .item nav svg, .accordion dt svg {
+    display: inline-flex;
+    fill: var(--b6);
+}
+
+.accordion :not(.open) .caret-down {
+    display: inline-flex;
+}
+
+.accordion :not(.open) .caret-up {
+    display: none;
+}
+
+.accordion .open .caret-down {
+    display: none;
+}
+
+.accordion .open .caret-up {
+    display: inline-flex;
+}
+
+/*
+.accordion .open .caret-up { display: inline-flex; }
+.accordion :not(.open) .caret-down { display: inline-flex; }
+*/
+#pb .tab-menu {
+    background: var(--nbg);
+    padding-top: .5rem;
+    border-bottom: none;
+}
+
+#pb .tab-menu .tab {
+    padding-right: 3em;
+}
+
+#pb .tab-content div.tab {
+    border: none;
+}
+
+.tab-content div.tab {
+    border: none;
+}
+
+[contenteditable] {
+    outline: none;
+}
+
+[contenteditable].line {
+    padding: 0;
+    border: none;
+}
+
+[contenteditable].line:focus, [contenteditable].line:hover {
+    background: #0001;
+}
+
+.item {
+    margin-bottom: 1em;
+}
+
+.item nav {
+    height: 36px;
+    border: 1px solid var(--b3);
+    border-bottom: none;
+}
+
+.item .name {
+    font-size: .9em;
+    width: 100%;
+}
+
+.item .text {
+    padding: var(--pad);
+    border: 1px solid var(--b3);
+    min-height: 5em;
+    font-family: var(--fs-monospace);
+    font-size: .9em;
+    background: var(--b1);
+}
+
+div.archive {
+    border-top: 2px dotted var(--act);
+    padding: 1em 0;
+    position: relative;
+}
+
+div.archive:before {
+    content: "archive";
+    position: absolute;
+    left: .5em;
+    top: -.85em;
+    font-weight: 700;
+    text-transform: lowercase;
+    background: var(--bg);
+    padding: 0 .5rem;
+    font-size: .7em;
+    color: var(--act)
+}
+
+.item.keep {
+    font-size: 16px;
+    opacity: .9;
+}
+
+.item.keep:focus, .item.keep:hover {
+    opacity: 1;
+}
+
+.text img {
+    width: 30%;
+    padding: .25rem;
+    border: 1px solid var(--b2);
+}
+
+#notes p {
+    font-size: .8em;
+    margin: .5em;
+}
+
+.note {
+    height: 77vh;
+    overflow-y: scroll;
+}
+
+input,textarea {
+    background: var(--wshade);
+    color: var(--fg);
+    padding: .25rem;
+    font-size: 1em;
+}
+
+.editpage textarea {
+    min-height: 9em;
+}
+
+.editpage button.submit {
+    padding: .5rem 2rem;
+    color: var(--fg);
+    background-color: var(--pbg);
+    border: 2px solid var(--bshade);
+    border-top: 2px solid var(--wshade);
+    border-left: 2px solid var(--wshade);
+}
+
+.carport {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 93vh;
+}
+
+.tcan {
+    display : flex;
+    width: 30%;
+    flex-direction: column;
+    flex-wrap: wrap;
+    font-size: .9em;
+}
+
+.tcan p {
+    display: flex;
+    margin: 0 0 .25rem 0;
+}
+
+.tcan p.submit {
+    margin-top: 1rem;
+}
+
+.tcan label {
+    width: 50%;
+    text-transform: capitalize;
+}
+
+.tcan input[type='color'] {
+    padding: 0;
+    border: none;
+    outline: none;
+    margin: 0;
+}
+
+.tcan .submit {
+    width: 100%;
+}
+
+main {
+    min-height: 100vh;
+}
+
+div#workspace {
+    margin-top: calc(40px + 1rem);
+}
+
+#pb .input-group {
+    width: 33%;
+}
+
+#pb .input-group select {
+    width: 80%;
+    font-size: .9em;
+}
+
+select.naked {
+    border: none;
+    outline: none;
+    background: transparent
+}
+
+select.naked options {
+    background: var(--bg);
+}
+
+.modal.tl {
+    left: 23%;
+    top: 1em;
+    width: 75%
+}
+
+.modal label {
+    font-weight: 600;
+}
+
+.modal .title {
+    font-weight: 100;
+}
+
+.content header {
+    padding: var(--pad) calc(2 * var(--pad));
+    ; background: var(--nbg);
+    height: 85px;
+}
+
+.content header h3 {
+    font-weight: 100;
+    margin: 0;
+    font-size: 2em;
+}
+
+#setting.content > div, #datajson.content > div {
+    padding: calc(2 * var(--pad));
+}
+
+.filebox b {
+    margin-bottom: .5rem;
+}
+
+.filebox svg.x2 {
+    height: 64px;
+    width: 64px;
+}
+
+.filebox a svg {
+    margin: 0 .5rem;
+}
+
+.filebox a {
+    padding: .125rem;
+    width: 160px;
+    border: 1px solid var(--b5);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.filebox a.right {
+    justify-content: flex-end;
+}
+
+.on-right {
+    float: right;
+}
+
+.norm {
+    font-weight: normal;
+}
+
+.sample {
+    width: 70%;
+    margin-left: 1em;
+}
+
+h1.title {
+    font-weight: 100;
+    font-size: 3em;
+    margin-bottom: 0;
+}
+
+html body {
+    display: none;
+}
+
+html body.rendered {
+    display: block;
+}
+
+[data-modal], [data-content] {
+    cursor: pointer;
+}
+
+button,input,select,textarea {
+    background: var(--bg);
+    color: var(--b6);
+}
