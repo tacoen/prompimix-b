@@ -172,6 +172,7 @@ function workspace_save(download=false) {
 function workspace_load(project) {
     //console.log('t',project);
     //datalist
+    lsd = ta.lsd
     datalist = document.getElementById('projects');
     var projects = Object.keys(lsd['workspace']).sort();
     datalist.innerHTML = '';
