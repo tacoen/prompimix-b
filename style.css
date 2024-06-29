@@ -1,26 +1,25 @@
 
 @keyframes scroll-bg {
     0% {
-        transform: translate(0%, -3%) perspective(200px) rotate(15deg) scale(1.4);
+         transform: rotate(10deg) scale(1.2) translate3d(-5%, 5%, 30px);
     }
     50% {
-        transform: translate(2%, -1%) perspective(50px) rotate(10deg) scale(1.1);
+        transform: rotate(12deg) scale(1.4) translate3d(-5%, 5%, 130px);;
     }
-    60% {
-        transform: translate(2%, -1%) perspective(0px) rotate(12deg) scale(1.1);
-    }    
+ 
     100% {
-        transform: translate(0%, -3%) perspective(200px) rotate(15deg) scale(1.4);
+         transform: rotate(10deg) scale(1.2) translate3d(-5%, 5%, 30px);;
     }
-
-
 }
+
 body { background:#111;}
 body {
    --fg: #111;
+   overflow: hidden;
 }
 .bodyrun {
    position: fixed;
+   overflow: hidden;
    top: 0;
    left: 0;
    width: 150%;
@@ -35,7 +34,7 @@ body {
         1310px 0px / 200px 200px no-repeat url('pb/demo-image/c.jpg'),
         
         0px 220px / 200px 200px no-repeat url('pb/demo-image/6.jpg'), 
-        220px 220px / 200px 200px no-repeat url('pb/demo-image/7.jpg'), 
+        220px 240px / 200px 200px no-repeat url('pb/demo-image/7.jpg'), 
         440px 220px / 200px 200px no-repeat url('pb/demo-image/8.jpg'), 
         660px 240px / 200px 200px no-repeat url('pb/demo-image/9.jpg'), 
         880px 220px / 200px 200px no-repeat url('pb/demo-image/a.jpg'), 
@@ -60,7 +59,7 @@ body {
       
         var(--fg);
    opacity:.5;
-   transform: rotate(8deg) scale(1.1);
+   perspective: -900px;
    animation: scroll-bg 120s linear infinite;
    z-index: -1;
 }
@@ -73,3 +72,18 @@ body {
     align-items: center;
 }
 
+
+
+a.button {
+    background:  #fc3;
+    text-decoration: none;
+    border: 2px solid #0006;
+    border-top: 2px solid #fff6;
+    border-right: 2px solid #fff6;
+    padding: .5rem 1rem;
+    font-size: 24px;
+    color: #000;
+    font-weight: 700;
+    font-family: sans-serif;
+    text-transform: capitalize;
+}
