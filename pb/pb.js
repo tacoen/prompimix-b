@@ -1,225 +1,22 @@
-console.log('pb.js');
-/* to ta */
-function stripHTMLTags(str) {
-    return str.replace(/<[^>]+>/g, '');
+function ta_uniqueString(txta) {
+    const uniqueSet = new Set(txta);
+    const sortedAndUnique = [...uniqueSet].sort();
+    return sortedAndUnique;
 }
-function expandHexColor(hexColor) {
-  // Check if the input is a valid 3-character hex color
-  if (hexColor.length !== 3 || !hexColor.match(/^[0-9A-F]{3}$/i)) {
-    return hexColor;
-  }
-
-  // Expand the 3-character hex to a 6-character hex
-  let expandedColor = '';
-  for (let i = 0; i < hexColor.length; i++) {
-    expandedColor += hexColor[i] + hexColor[i];
-  }
-  return expandedColor.toUpperCase();
-}
-
-function tcan() {
-    console.log('tcan!!');
-    const root = document.documentElement;
-    const cssstyle = document.getElementById('tcanstyles');
-    const saveThemeButton = document.getElementById('save-theme');
-    const colorInputs = document.querySelectorAll('#setting input[type="color"]');
-
-    if (!cssstyle) {
-        console.error('The #tcan-style element was not found in the DOM.');
-        return;
-    }
-
-    let cssRules = '';
-
-    colorInputs.forEach(input => {
-        const variableName = input.id.replace('-input', '');
-        input.value = expandHexColor( getComputedStyle(root).getPropertyValue(`--${variableName}`));
-        //console.log(variableName, input.value);
-
-        input.addEventListener('input', () => {
-
-            const variableName = input.id.replace('-input', '');
-            const newValue = input.value;
-            root.style.setProperty(`--${variableName}`, newValue);
-
-            // Update the CSS rules
-            updateCSSRules(colorInputs);
-        });
-    });
-
-    // Update the CSS rules initially
-    updateCSSRules(colorInputs);
-
-    saveThemeButton.addEventListener('click', ()=>{
-        saveThemeToStorage();
+function uniqueAssignID(htmlString) {
+    const regex = /id="([^"]+)"|for="([^"]+)"/g;
+    let randomNum = Math.floor(Math.random() * 1000);
+    return htmlString.replace(regex, (match,id,forAttr)=>{
+        if (id) {
+            return `id="${id}${randomNum}"`;
+        } else {
+            return `for="${forAttr}${randomNum}"`;
+        }
     }
     );
-    
 }
 
-function updateCSSRules(colorInputs) {
-    let cssRules = ':root {\n';
-    const cssstyle = document.getElementById('tcanstyles');
-    colorInputs.forEach(input => {
-        const variableName = input.id.replace('-input', '');
-        cssRules += `  --${variableName}: ${input.value};\n`;
-    });
-
-    cssRules += '}';
-    cssstyle.textContent = cssRules;
-}
-
-
-
-
-function saveThemeToStorage() {
-    const cssstyle = document.getElementById('tcanstyles');
-    localStorage.setItem('theme', JSON.stringify(cssstyle.textContent));
-}
-
-function loadThemeFromStorage() {
-    const themeData = JSON.parse(localStorage.getItem('theme'))||"";
-    const cssstyle = document.getElementById('tcanstyles');
-    cssstyle.textContent =  themeData 
-}
-
-function prompt_load(lsd) {
-    var div = document.createElement('div');
-    div.id = 'data'
-    div.setAttribute('spellcheck', false);
-    div.className = "pa pb2 thin-scrollable bgshade";
-    const dl = document.createElement('dl');
-    dl.className = 'accordion'
-    const obj = lsd.prompts;
-    for (const key in obj) {
-        const dl = document.createElement('dl');
-        dl.dataset.name = key;
-        dl.className = 'accordion'
-        const dt = document.createElement('dt');
-        dt.innerHTML = '<b><i data-icon="caret-down"></i><i data-icon="caret-up"></i>' + key + '</b>';
-        dt.appendChild(dt_bar());
-        dt.dataset.prefix = obj[key]['prefix'];
-        dt.dataset.suffix = obj[key]['suffix'];
-        dl.appendChild(dt);
-        const dd = document.createElement('dd');
-        const nestedUl = document.createElement('ul');
-        nestedUl.setAttribute('contenteditable', true);
-        let items = obj[key].items;
-        JSON.parse(JSON.stringify(items)).forEach((item)=>{
-            var nestedLi = document.createElement('li');
-            nestedLi.textContent = item;
-            nestedUl.appendChild(nestedLi);
-        }
-        );
-        dd.appendChild(nestedUl);
-        dl.appendChild(dd);
-        div.appendChild(dl);
-    }
-    return div;
-}
-function prompt_save(download=false) {
-    var data = ta.lsd
-    data['prompts'] = prompt_htmlObject(document.querySelector('#prompts').innerHTML)
-    //console.log(data);
-    localStorage.setItem(ta.host, JSON.stringify(data));
-    if (download) {
-        downloadJsonData(data['prompts'], 'prompt')
-    }
-}
-function prompt_htmlObject(htmlString) {
-    // Parse the HTML string into a DOM document
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(htmlString, 'text/html');
-    // Get the main container element
-    const container = doc.getElementById('data');
-    // Initialize the output object
-    const output = {};
-    // Iterate over the accordion elements
-    const accordions = container.getElementsByTagName('dl');
-    for (const accordion of accordions) {
-        // Get the title from the <dt> element
-        const title = accordion.getElementsByTagName('dt')[0].textContent.trim();
-        const prefix = accordion.getElementsByTagName('dt')[0].dataset.prefix || "";
-        const suffix = accordion.getElementsByTagName('dt')[0].dataset.suffix || "";
-        // Get the list items from the <dd> element
-        const listItems = accordion.getElementsByTagName('li');
-        const values = Array.from(listItems).map(li=>li.textContent.trim());
-        values.sort();
-        // Add the title-values pair to the output object
-        output[title] = {
-            items: values,
-            prefix: prefix,
-            suffix: suffix
-        };
-    }
-    // Sort the titles
-    const sortedTitles = Object.keys(output).sort();
-    const sortedOutput = {};
-    for (const title of sortedTitles) {
-        sortedOutput[title] = output[title];
-    }
-    return sortedOutput;
-}
-function workspace_save(download=false) {
-    data = ta.lsd
-    console.log(data);
-    let workspace_data = data['workspace']
-    console.log(workspace_data);
-    if (download) {
-        downloadJsonData(workspace_data, 'workspace')
-    }
-}
-function workspace_load(project) {
-    //console.log('t',project);
-    //datalist
-    datalist = document.getElementById('projects');
-    var projects = Object.keys(lsd['workspace']).sort();
-    datalist.innerHTML = '';
-    //console.log(projects)
-    projects.forEach((p)=>{
-        var opt = document.createElement('option');
-        opt.textContent = p;
-        if ( p == project) { opt.setAttribute('selected',true); }
-        datalist.appendChild(opt)
-    }
-    );
-    var opt = document.createElement('option');
-    opt.textContent = "New Project";
-    datalist.prepend(opt);
-    document.querySelector('select[name="project"]').value = project
-    // reset entry item;
-    document.querySelectorAll('#workspace .item.new').forEach( inew =>{
-        inew.querySelector('span.name').innerText=ta.rndtext()+ta.rndnum();
-        inew.querySelector('div.entry').textContent='';
-    });
-    let workspace_data = {}
-    if (ta.notempty(ta.lsd['workspace'])) {
-        workspace_data = ta.lsd['workspace'][project] || {}
-        //maker
-        var archive = workspace.querySelector('#maker .archive');
-        archive.innerHTML = "";
-        Object.keys(workspace_data['maker']).forEach((part)=>{
-            //console.log(part);
-            var name = workspace_data['maker'][part]['name'];
-            var value = workspace_data['maker'][part]['prompt'];
-            archive.prepend(newdiv(name, value, part));
-        }
-        );
-        //negative
-        var archive = workspace.querySelector('#negative .archive');
-        archive.innerHTML = "";
-        Object.keys(workspace_data['negative']).forEach((part)=>{
-            //console.log(part);
-            var name = workspace_data['negative'][part]['name'];
-            var value = workspace_data['negative'][part]['prompt'];
-            archive.prepend(newdiv(name, value, part));
-        }
-        );
-        // notes
-        document.querySelector('#notes .text').innerHTML = workspace_data['notes'] || "";
-    }
-}
-async function uploadJsonToServer(data, filename='prompt') {
+async function pjson_uploadphp(data, filename='prompt') {
     try {
         const formData = new FormData();
         formData.append('json_data', JSON.stringify(data));
@@ -230,26 +27,24 @@ async function uploadJsonToServer(data, filename='prompt') {
         });
         const result = await response.json();
         console.log('JSON file uploaded successfully:', result);
-        //downloadJsonData(data, filename);
     } catch (error) {
         console.error('Error uploading JSON file:', error);
     }
 }
-function downloadJsonData(data, filename='prompt') {
+function pjson_download(data, filename='prompt') {
     let t = JSON.stringify(data)
       , r = document.createElement("a")
       , a = Date.now()
       , o = new Blob([t],{
         type: "text/plain"
     });
-    uploadJsonToServer(data, filename);
+    pjson_uploadphp(data, filename);
     (r.href = URL.createObjectURL(o)),
     (r.download = a + "-" + filename + ".json"),
     r.click(),
     URL.revokeObjectURL(r.href);
 }
-// Assuming you have a DATA variable defined elsewhere in your code
-function importJSON(dataType) {
+function pjson_import(dataType) {
     const jsonFileInput = document.createElement('input');
     jsonFileInput.type = 'file';
     jsonFileInput.accept = '.json';
@@ -260,8 +55,9 @@ function importJSON(dataType) {
             reader.onload = function(e) {
                 try {
                     const jsonData = JSON.parse(e.target.result);
-                    mergeData(dataType, jsonData);
+                    pjson_mergedata(dataType, jsonData);
                     console.log(`${dataType} JSON imported and merged with DATA.`);
+                    window.location.reload();
                 } catch (error) {
                     console.error('Error parsing JSON:', error);
                 }
@@ -275,7 +71,7 @@ function importJSON(dataType) {
     ;
     jsonFileInput.click();
 }
-function mergeData(dataType, jsonData) {
+function pjson_mergedata(dataType, jsonData) {
     let DATA = ta.lsd;
     DATA[dataType] = {
         ...DATA[dataType],
@@ -283,11 +79,460 @@ function mergeData(dataType, jsonData) {
     };
     localStorage.setItem(ta.host, JSON.stringify(DATA))
 }
-/*
-document.getElementById('promptsLink').addEventListener('click', () => importJSON('prompts'));
-document.getElementById('workspaceLink').addEventListener('click', () => importJSON('workspace'));
-*/
-function dt_bar() {
+
+
+function pb_clipboardCopy(text) {
+    var tempTextArea = document.createElement("textarea");
+    tempTextArea.value = text;
+    document.body.appendChild(tempTextArea);
+    tempTextArea.select();
+    tempTextArea.setSelectionRange(0, 99999);
+    document.execCommand("copy");
+    document.body.removeChild(tempTextArea);
+}
+function pb_load(obj) {
+    let project = obj.value.toLowerCase();
+    if (project == "new project") {
+        project = prompt("New Project name", "");
+        if (project === null) {
+            return false;
+        }
+        console.log('new', project)
+        lsd = ta.lsd;
+        lsd['workspace'][project] = {};
+        lsd['workspace'][project]['maker'] = {};
+        lsd['workspace'][project]['negative'] = {};
+        lsd['workspace'][project]['notes'] = "";
+        obj.value = project.toLowerCase();
+    } else {
+        project = obj.value
+    }
+    console.log('new2', project, obj.value)
+    obj.value = project;
+    workspace_load(project);
+}
+function pb_randomize(obj) {
+    console.log('hi');
+    var lis = obj.closest('dl').querySelectorAll('dd ul li');
+    var randomIndex = Math.floor(Math.random() * lis.length);
+    var liText = lis[randomIndex].textContent;
+    console.log(liText);
+    pbf_LiClickhandle(obj, liText);
+}
+function pb_editForm(obj) {
+    var lis = [];
+    obj.closest('dl').querySelectorAll('dd ul li').forEach(li=>{
+        lis.push(li.innerText);
+    }
+    );
+    alis = ta.uniqsort.string(lis);
+    var dprompt = obj.closest('dt').innerText.toLowerCase();
+    var suffix = obj.closest('dt').dataset.suffix;
+    var prefix = obj.closest('dt').dataset.prefix;
+    var overlay = document.getElementById('overlay');
+    var htmlpart = document.querySelector('#htmlpart [modal="editpage"]').cloneNode(true);
+    htmlpart.innerHTML = uniqueAssignID(htmlpart.innerHTML);
+    var closebtn = htmlpart.querySelector('button.closer');
+    htmlpart.removeAttribute('modal');
+    htmlpart.classList.add('editpage');
+    htmlpart.dataset.prompt = dprompt;
+    closebtn.addEventListener('click', ()=>{
+        htmlpart.remove();
+        ta.class.toggle(overlay, 'active');
+    }
+    );
+    htmlpart.querySelector("input[name='prompt']").value = dprompt;
+    htmlpart.querySelector("input[name='prefix']").value = prefix;
+    htmlpart.querySelector("input[name='suffix']").value = suffix;
+    htmlpart.querySelector("textarea[name='promptext']").value = lis.toString().replace(/,/g, "\n");
+    ta.class.toggle(overlay, 'active');
+    ta.class.toggle(htmlpart, 'show');
+    overlay.appendChild(htmlpart);
+}
+function pb_editSave(obj) {
+    const htmlpart = obj.closest('div.modal.show');
+    const title = htmlpart.dataset.prompt;
+    let newprompt = false;
+    if (htmlpart.querySelector('textarea[name="promptext"]').value === "") {
+        const prompts = document.querySelector('#prompts');
+        prompts.querySelector(`dl[data-name="${title}"]`).remove();
+        prompt_save(false);
+        htmlpart.remove();
+        ta.class.toggle(overlay, 'active');
+        return false;
+    }
+    if (htmlpart.querySelector('input[name="prompt"]').value !== htmlpart.dataset.prompt) {
+        title = htmlpart.querySelector('input[name="prompt"]').value;
+        newprompt = true;
+    }
+    const suffix = htmlpart.querySelector('input[name="suffix"]').value;
+    const prefix = htmlpart.querySelector('input[name="prefix"]').value;
+    const values = htmlpart.querySelector('textarea[name="promptext"]').value.split('\n').sort();
+    const prompts = document.querySelector('#prompts');
+    if (!newprompt) {
+        const dt = prompts.querySelector(`dl[data-name="${title}"] dt`);
+        const ul = prompts.querySelector(`dl[data-name="${title}"] dd ul`);
+        dt.dataset.prefix = prefix;
+        dt.dataset.suffix = suffix;
+        ul.innerHTML = '';
+        values.forEach(item=>{
+            const Li = document.createElement('li');
+            Li.textContent = item;
+            ul.appendChild(Li);
+        }
+        );
+    } else {
+        const data = prompts.querySelector('#data');
+        const dl = document.createElement('dl');
+        const dt = document.createElement('dt');
+        const dd = document.createElement('dd');
+        const ul = document.createElement('ul');
+        dd.appendChild(ul);
+        dl.appendChild(dt);
+        dl.appendChild(dd);
+        dl.dataset.name = title;
+        dl.classList.add('accordion');
+        dt.innerHTML = `<b><i data-icon="caret-down"></i><i data-icon="caret-up"></i>${title}</b>`;
+        dt.appendChild(pbf_dtbar());
+        ul.contentEditable = true;
+        data.prepend(dl);
+        taicon.delay();
+        dt.dataset.prefix = prefix;
+        dt.dataset.suffix = suffix;
+        ul.innerHTML = '';
+        values.forEach(item=>{
+            const Li = document.createElement('li');
+            Li.textContent = item;
+            ul.appendChild(Li);
+        }
+        );
+    }
+    prompt_save(false);
+    htmlpart.remove();
+    ta.class.toggle(overlay, 'active');
+    pbf_licanclick();
+}
+function pb_copy(btn) {
+    var textToCopy = btn.closest('div.item').querySelector('.text').textContent;
+    pb_clipboardCopy(textToCopy);
+    pb_btnnotice(btn);
+}
+function pb_keep(btn) {
+    var textToCopy = btn.closest('div.item').querySelector('.text').innerHTML;
+    var name = btn.closest('div.item').querySelector('.name').innerText;
+    var where = document.querySelector('.tab-menu .active').dataset.tab;
+    workspace.querySelector('#' + where + ' .archive').prepend(pbf_newdiv(name, textToCopy));
+    pb_btnnotice(btn);
+}
+function pb_btnnotice(btn) {
+    btn.classList.add('accent');
+    setTimeout(function() {
+        btn.classList.remove('accent');
+    }, 2000);
+}
+function pb_trim(btn) {
+    var entry = btn.closest('div.item').querySelector('.text')
+    var textToCopy = ta.stripHTMLTags(entry.innerText.trim());
+    textToCopy = textToCopy.replace(/,\s+$|,$/g, '');
+    textToCopy = textToCopy.replace(/,/g, ', ');
+    textToCopy = textToCopy.replace(/\s+/g, ' ')
+    textToCopy = textToCopy.replace(/\s+,/g, ',');
+    entry.innerHTML = textToCopy;
+    pb_btnnotice(btn)
+}
+function pb_breaks(obj) {
+    var entry = obj.closest('div.item').querySelector('.text')
+    var txtb = entry.textContent.replace(/,/g, ',\n')
+    entry.innerText = txtb.toString().toLowerCase();
+    pb_btnnotice(obj);
+}
+function pb_unique(obj) {
+    var entry = obj.closest('div.item').querySelector('.text')
+    var txta = entry.textContent.replace(/\s+,/g, ',').replace(/,\s+/g, ',').split(',');
+    txta.map(word=>word.trim()).filter(word=>word !== ' ');
+    var tas = ta_uniqueString(txta);
+    entry.textContent = tas.toString().toLowerCase();
+    pb_trim(obj);
+}
+function pb_delete(btn) {
+    var entry = btn.closest('div.item');
+    entry.remove()
+    pb_btnnotice(btn);
+}
+function pb_save(obj) {
+    let pdata = lsd['workspace'] || {};
+    lsd['workspace'] = pdata;
+    var name = ta.elementof('select[name="project"]').value;
+    lsd['workspace'][name] = {}
+    lsd['workspace'][name]['maker'] = pbf_workspace_collectdata("maker");
+    lsd['workspace'][name]['negative'] = pbf_workspace_collectdata("negative");
+    var note_text = document.querySelector('#notes .text').innerHTML || false;
+    if (note_text) {
+        lsd['workspace'][name]['notes'] = note_text
+    }
+    lsd['workspace']
+    console.log(lsd);
+    console.log(lsd);
+    localStorage.setItem(ta.host, JSON.stringify(lsd));
+    pb_btnnotice(obj);
+}
+function pb_search(event) {
+    if (event.target.value.length >= 2) {
+        const searchTerm = event.target.value.toLowerCase();
+        const dlElements = document.querySelectorAll('#prompts dl');
+        for (const dl of dlElements) {
+            const dtElement = dl.querySelector('dt');
+            const liElements = dl.querySelectorAll('li');
+            let isDTfound = false;
+            if (dtElement.textContent.toLowerCase().includes(searchTerm)) {
+                dtElement.classList.add('highlight');
+                isDTfound = true;
+            } else {
+                dtElement.classList.remove('highlight');
+            }
+            if (isDTfound) {
+                for (const li of liElements) {
+                    li.style.display = 'list-item';
+                    li.classList.remove('highlight');
+                }
+                dl.style.display = 'block';
+            } else {
+                let isLIfound = false;
+                for (const li of liElements) {
+                    if (li.textContent.toLowerCase().includes(searchTerm)) {
+                        isLIfound = true;
+                        li.classList.add('highlight');
+                        li.style.display = 'list-item';
+                    } else {
+                        li.classList.remove('highlight');
+                        li.style.display = 'none';
+                    }
+                    li.closest('dl').querySelector('dt').classList.add('open');
+                }
+                if (isLIfound) {
+                    dl.style.display = 'block';
+                } else {
+                    dl.style.display = 'none';
+                }
+            }
+        }
+    } else {
+        const dlElements = document.querySelectorAll('#prompts dl');
+        for (const dl of dlElements) {
+            dl.style.display = 'block';
+            const liElements = dl.querySelectorAll('li');
+            for (const li of liElements) {
+                li.style.display = 'list-item';
+                li.classList.remove('highlight');
+            }
+            dl.querySelector('dt').classList.remove('highlight');
+            dl.querySelector('dt').classList.remove('open');
+        }
+    }
+}
+function pb_enableNew(obj) {
+    obj.removeAttribute('readonly')
+    console.log('ena?', obj);
+}
+function pb_textWeight(btn) {
+    var contentEditable = btn.closest('div.item').querySelector('.text')
+    const selectedText = window.getSelection().toString();
+    if (selectedText) {
+        const words = selectedText.trim().split(/\s+/);
+        const formattedOutput = words.map(word=>`${word}:1`).join(', ');
+        const newContent = contentEditable.innerHTML.replace(selectedText, formattedOutput);
+        contentEditable.innerHTML = newContent;
+    }
+}
+
+function InstantStyle() {
+    const root = document.documentElement;
+    const cssstyle = document.getElementById('InstantStyle');
+    const saveThemeButton = document.getElementById('save-theme');
+    const colorInputs = document.querySelectorAll('#setting input[type="color"]');
+    if (!cssstyle) {
+        console.error('The #InstantStyle style element was not found in the DOM.');
+        return;
+    }
+    let cssRules = '';
+    colorInputs.forEach(input=>{
+        const variableName = input.id.replace('-input', '');
+        input.value = ta.expandHexColor(getComputedStyle(root).getPropertyValue(`--${variableName}`));
+        input.addEventListener('input', ()=>{
+            const variableName = input.id.replace('-input', '');
+            const newValue = input.value;
+            root.style.setProperty(`--${variableName}`, newValue);
+            InstantStyle_update(colorInputs);
+        }
+        );
+    }
+    );
+    InstantStyle_update(colorInputs);
+    saveThemeButton.addEventListener('click', ()=>{
+        InstantStyle_save();
+    }
+    );
+}
+function InstantStyle_update(colorInputs) {
+    let cssRules = ':root {\n';
+    const cssstyle = document.getElementById('InstantStyle');
+    colorInputs.forEach(input=>{
+        const variableName = input.id.replace('-input', '');
+        cssRules += `  --${variableName}: ${input.value};\n`;
+    }
+    );
+    cssRules += '}';
+    cssstyle.textContent = cssRules;
+}
+function InstantStyle_save() {
+    const cssstyle = document.getElementById('InstantStyle');
+    localStorage.setItem('theme', JSON.stringify(cssstyle.textContent));
+}
+function InstantStyle_load() {
+    const themeData = JSON.parse(localStorage.getItem('theme')) || "";
+    const cssstyle = document.getElementById('InstantStyle');
+    cssstyle.textContent = themeData
+}
+
+function prompt_load(lsd) {
+    const d = document.createElement('div');
+    d.id = 'data';
+    d.spellcheck = false;
+    d.classList.add('thin-scrollable');
+    for (const key in lsd.prompts) {
+        const dl = document.createElement('dl');
+        dl.dataset.name = key;
+        dl.classList.add('accordion');
+        const dt = document.createElement('dt');
+        dt.innerHTML = `<b><i data-icon="caret-down"></i><i data-icon="caret-up"></i>${key}</b>`;
+        dt.appendChild(pbf_dtbar());
+        dt.dataset.prefix = lsd.prompts[key].prefix || "";
+        dt.dataset.suffix = lsd.prompts[key].suffix || "";
+        dl.appendChild(dt);
+        const dd = document.createElement('dd');
+        const nUl = document.createElement('ul');
+        nUl.contentEditable = true;
+        lsd.prompts[key].items.forEach(item=>{
+            const nLi = document.createElement('li');
+            nLi.textContent = item;
+            nUl.appendChild(nLi);
+        }
+        );
+        dd.appendChild(nUl);
+        dl.appendChild(dd);
+        d.appendChild(dl);
+    }
+    return d;
+}
+function prompt_save(download=false) {
+    var data = ta.lsd
+    data['prompts'] = prompt_htmlObject(document.querySelector('#prompts').innerHTML)
+    localStorage.setItem(ta.host, JSON.stringify(data));
+    if (download) {
+        pjson_download(data['prompts'], 'prompt')
+    }
+}
+function prompt_htmlObject(hS) {
+    const p = new DOMParser();
+    const d = p.parseFromString(hS, 'text/html');
+    const c = d.getElementById('data');
+    const o = {};
+    const a = c.getElementsByTagName('dl');
+    for (const ac of a) {
+        const t = ac.getElementsByTagName('dt')[0].textContent.trim();
+        const p = ac.getElementsByTagName('dt')[0].dataset.prefix || "";
+        const s = ac.getElementsByTagName('dt')[0].dataset.suffix || "";
+        const l = ac.getElementsByTagName('li');
+        const v = Array.from(l).map(li=>li.textContent.trim());
+        v.sort();
+        o[t] = {
+            items: v,
+            prefix: p,
+            suffix: s
+        };
+    }
+    const sT = Object.keys(o).sort();
+    const sO = {};
+    for (const t of sT) {
+        sO[t] = o[t];
+    }
+    return sO;
+}
+
+function workspace_save(download=false) {
+    data = ta.lsd
+    console.log(data);
+    let workspace_data = data['workspace']
+    console.log(workspace_data);
+    if (download) {
+        pjson_download(workspace_data, 'workspace')
+    }
+}
+function workspace_load(project) {
+    lsd = ta.lsd
+  try {
+    const projects = Object.keys(lsd['workspace']).sort();
+    workspace_load_continue(project,projects);      
+  } catch (error) {
+    if (error instanceof TypeError && lsd['workspace'] === undefined) {
+      lsd['workspace'] = { 'default': {'maker':{}, 'negative': {} },  };
+      lsd['prompts'] = { 'basic': { 'items':['photo','illustration'] }};
+      localStorage.setItem(ta.host, JSON.stringify(lsd));
+      window.location.reload();
+      const projects = Object.keys(lsd['workspace']).sort();  
+      workspace_load_continue(project,projects);
+    } else {
+      console.error('Error:', error);
+      return true; 
+    }
+  }
+}
+function workspace_load_continue(project,projects=false) {
+    const datalist = document.getElementById('projects');
+    datalist.innerHTML = '';
+    projects.forEach(p=>{
+        const opt = document.createElement('option');
+        opt.textContent = p;
+        if (p === project) {
+            opt.setAttribute('selected', true);
+        }
+        datalist.appendChild(opt);
+    }
+    );
+    const opt = document.createElement('option');
+    opt.textContent = "New Project";
+    datalist.prepend(opt);
+    document.querySelector('select[name="project"]').value = project;
+    document.querySelectorAll('#workspace .item.new').forEach(inew=>{
+        inew.querySelector('span.name').innerText = ta.rndtext() + ta.rndnum();
+        inew.querySelector('div.entry').textContent = '';
+    }
+    );
+    let workspace_data = {};
+    if (ta.notempty(ta.lsd['workspace'])) {
+        workspace_data = ta.lsd['workspace'][project] || {};
+        const maker_archive = workspace.querySelector('#maker .archive');
+        maker_archive.innerHTML = "";
+        Object.keys(workspace_data['maker']).forEach(part=>{
+            const name = workspace_data['maker'][part]['name'];
+            const value = workspace_data['maker'][part]['prompt'];
+            maker_archive.prepend(pbf_newdiv(name, value, part));
+        }
+        );
+        const negative_archive = workspace.querySelector('#negative .archive');
+        negative_archive.innerHTML = "";
+        Object.keys(workspace_data['negative']).forEach(part=>{
+            const name = workspace_data['negative'][part]['name'];
+            const value = workspace_data['negative'][part]['prompt'];
+            negative_archive.prepend(pbf_newdiv(name, value, part));
+        }
+        );
+        document.querySelector('#notes .text').innerHTML = workspace_data['notes'] || "";
+        document.title = "Prompimix: "+ project;
+    }
+}
+
+function pbf_dtbar() {
     var div = document.createElement('div');
     var btn1 = document.createElement('button');
     var btn2 = document.createElement('button');
@@ -302,36 +547,22 @@ function dt_bar() {
     div.appendChild(btn1);
     return div;
 }
-function add_li(obj) {
-    var lis = obj.closest('dl').querySelector('dd ul');
-    var dt = obj.closest('dt');
-    var li = document.createElement('li');
-    li.innerText = "New"
-    lis.prepend(li);
-    dt.classList.add('open');
-}
-function licanclick() {
-    // Get the #prompts element
+function pbf_licanclick() {
     const promptsElement = document.querySelector('#prompts');
-    // Get all the li elements inside #prompts #data
     const liElements = document.querySelectorAll('#prompts #data li');
-    // Remove any existing click event listeners from the li elements
     liElements.forEach((li)=>{
-        li.removeEventListener('click', handleLiClick);
+        li.removeEventListener('click', pbf_LiClickhandle);
     }
     );
-    // Check if the #prompts element has the .transfer class
     if (promptsElement.classList.contains('transfer')) {
-        // Add click event listeners to the li elements
         liElements.forEach((li)=>{
-            li.addEventListener('click', handleLiClick);
+            li.addEventListener('click', pbf_LiClickhandle);
         }
         );
     }
 }
-function handleLiClick(obj=false, text=false) {
+function pbf_LiClickhandle(obj=false, text=false) {
     if (!text) {
-        // Get the text content of the clicked <li> element
         var liText = this.textContent;
         var obj = this;
     } else {
@@ -339,14 +570,12 @@ function handleLiClick(obj=false, text=false) {
     }
     var prefix = obj.closest('dl').querySelector('dt').dataset.prefix || "";
     var suffix = obj.closest('dl').querySelector('dt').dataset.suffix || "";
-    // Get the #maker div.entry element
     var where = document.querySelector('.tab-menu .active').dataset.tab;
     const entryElement = document.querySelector('#' + where + ' div.entry');
-    // Get the current cursor position in the #maker div.entry element
     const currentPos = parseInt(entryElement.dataset.position, 10);
-    // Update the text in the #maker div.entry element
     const currentText = entryElement.textContent;
     let newText = `${currentText.slice(0, currentPos)}, ${prefix} ${liText} ${suffix} , ${currentText.slice(currentPos)}, `;
+    newText = newText.replace(/\;/g, ', ');
     newText = newText.replace(/\s+/g, ' ');
     newText = newText.replace(/^,\s*/g, '');
     newText = newText.replace(/,\s*,|,,|\s*,/g, ',');
@@ -357,8 +586,7 @@ function handleLiClick(obj=false, text=false) {
     entryElement.selectionEnd = currentPos + liText.length;
     entryElement.click();
 }
-// Function to get the current cursor position in the given element
-function getCaretPosition(entryElement) {
+function pbf_getCaretPosition(entryElement) {
     let position = 0;
     if (entryElement.isContentEditable) {
         const selection = window.getSelection();
@@ -386,44 +614,25 @@ function getCaretPosition(entryElement) {
         }
     }
     editableElement = entryElement;
-    // Focus on the element
     editableElement.focus();
     return position;
 }
-function moveCursorToPosition(entryElement, position) {
+function pbf_adjustCursor(entryElement, position) {
     if (entryElement.isContentEditable) {
         const selection = window.getSelection();
         const range = document.createRange();
-        // Ensure the position is within the text content length
         const textLength = entryElement.textContent.length;
         position = Math.min(position, textLength);
-        // Move the cursor to the specified position
         const textNode = entryElement.firstChild || entryElement.appendChild(document.createTextNode(''));
         range.setStart(textNode, position);
         range.collapse(true);
         selection.removeAllRanges();
         selection.addRange(range);
-        // Ensure the element is focused
         entryElement.focus();
-    } else {// Handle non-contenteditable elements
-    // (You may need to implement a different approach for these)
+    } else {
     }
 }
-function fallbackCopyToClipboard(text) {
-    // Create a temporary text area to hold the text
-    var tempTextArea = document.createElement("textarea");
-    tempTextArea.value = text;
-    document.body.appendChild(tempTextArea);
-    // Select the text in the temporary text area
-    tempTextArea.select();
-    tempTextArea.setSelectionRange(0, 99999);
-    // For mobile devices
-    // Copy the selected text
-    document.execCommand("copy");
-    // Remove the temporary text area
-    document.body.removeChild(tempTextArea);
-}
-function newdiv(name, textToCopy, id=false) {
+function pbf_newdiv(name, textToCopy, id=false) {
     var div = document.createElement('div')
     div.className = "item keep";
     div.id = id || ta.rndtext() + ta.rndnum();
@@ -432,7 +641,7 @@ function newdiv(name, textToCopy, id=false) {
     div.querySelector('.text').innerHTML = textToCopy;
     return div;
 }
-function collectdata(where) {
+function pbf_workspace_collectdata(where) {
     let d = {}
     document.querySelectorAll('#' + where + ' div.item').forEach(div=>{
         var text = div.querySelector('.text').innerText || false;
@@ -445,50 +654,60 @@ function collectdata(where) {
     );
     return d
 }
-function maincontent_selector() {
-    document.querySelectorAll('button[data-content]').forEach( b => { 
-      b.addEventListener('click', ()=>{
-        document.querySelectorAll('button[data-content]').forEach( b => { 
-          b.classList.remove('active');  });
-        var t = b.dataset.content;
-        var main = document.getElementsByTagName('main')[0];
-        main.querySelectorAll('div.content').forEach( d => { d.classList.add('hide'); });
-        var c = main.querySelector('#'+t+".content")
-        //console.log(c);
-        c.classList.toggle('hide');
-        ta.class.toggle(b,'active');
-    });  
-});
+function pbf_maincontent_selector() {
+    function fin() {
+       document.body.classList.add('rendered')
+    }
+    ta.fetch('#landing.content',null,fin());
+    document.querySelectorAll('button[data-content]').forEach(b=>{
+        b.addEventListener('click', ()=>{
+            document.querySelectorAll('button[data-content]').forEach(b=>{
+                b.classList.remove('active');
+            }
+            );
+            var t = b.dataset.content;
+            var main = document.getElementsByTagName('main')[0];
+            main.querySelectorAll('div.content').forEach(d=>{
+                d.classList.add('hide');
+            }
+            );
+            var c = main.querySelector('#' + t + ".content")
+            c.classList.toggle('hide');
+            ta.class.toggle(b, 'active');
+        }
+        );
+    }
+    );
 }
-/* Begin */
-document.getElementById('prompts').appendChild(prompt_load(lsd));
-document.getElementById('search-input').addEventListener('keydown', pb_search);
-// init
-
-loadThemeFromStorage();
-
-let workspace = document.getElementById('workspace');
-let nav = document.getElementById('pb');
-var cur_id = ta.rndtext() + ta.rndnum();
-var ncur_id = ta.rndtext() + ta.rndnum();
-workspace.querySelector('#maker .new .name').textContent = cur_id
-workspace.querySelector('#maker .new').id = cur_id
-workspace.querySelector('#negative .new .name').textContent = ncur_id
-workspace.querySelector('#negative .new').id = ncur_id
-//console.log('project',nav.querySelector('select[name="project"]').value)
-var project = nav.querySelector('select[name="project"]').value || 'default';
-workspace_load(project);
+function pbf_init() {
+    let lsd = ta.lsd;
+    document.getElementById('prompts').appendChild(prompt_load(lsd));
+    document.getElementById('search-input').addEventListener('keydown', pb_search);
+    InstantStyle_load();
+    let workspace = document.getElementById('workspace');
+    let nav = document.getElementById('pb');
+    var cur_id = ta.rndtext() + ta.rndnum();
+    var ncur_id = ta.rndtext() + ta.rndnum();
+    workspace.querySelector('#maker .new .name').textContent = cur_id
+    workspace.querySelector('#maker .new').id = cur_id
+    workspace.querySelector('#negative .new .name').textContent = ncur_id
+    workspace.querySelector('#negative .new').id = ncur_id
+    var project = nav.querySelector('select[name="project"]').value || 'default';
+    workspace_load(project);
+    console.log('pb.js');
+}
 document.addEventListener('DOMContentLoaded', ()=>{
+    pbf_init();
     const entryElement = document.querySelector('#maker div.entry');
     entryElement.dataset.position = entryElement.innerHTML.length;
     entryElement.addEventListener('click', ()=>{
-        const cursorPosition = getCaretPosition(entryElement);
-        //console.log('click', cursorPosition)
+        const cursorPosition = pbf_getCaretPosition(entryElement);
         entryElement.dataset.position = cursorPosition;
     }
     );
-    licanclick();
+    pbf_maincontent_selector();
+    pbf_licanclick();
     taicon.delay();
-    maincontent_selector();
+    ena.accordion('b')
 }
 );

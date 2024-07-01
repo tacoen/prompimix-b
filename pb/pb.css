@@ -21,23 +21,43 @@
     left: 0;
     width: 150%;
     height: 150%;
-    background: 0px 0 / 300px 375px no-repeat url('demo-image/1.webp'), 310px 0 / 300px 375px no-repeat url('demo-image/2.webp'), 620px 0 / 300px 375px no-repeat url('demo-image/3.webp'), 930px 0 / 300px 375px no-repeat url('demo-image/4.webp'), 1240px 0 / 300px 375px no-repeat url('demo-image/5.webp'), 1550px 0 / 300px 375px no-repeat url('demo-image/6.webp'), 0px 390px / 300px 375px no-repeat url('demo-image/3.webp'), 310px 390px / 300px 375px no-repeat url('demo-image/5.webp'), 620px 390px / 300px 375px no-repeat url('demo-image/1.webp'), 930px 390px / 300px 375px no-repeat url('demo-image/6.webp'), 1240px 390px / 300px 375px no-repeat url('demo-image/5.webp'), 1550px 390px / 300px 375px no-repeat url('demo-image/4.webp'), #000;
+    background: 
+        0px 0 / 300px 375px no-repeat url('demo-image/1.webp'), 
+        310px 20px / 300px 375px no-repeat url('demo-image/2.webp'), 
+        620px 0 / 300px 375px no-repeat url('demo-image/3.webp'), 
+        930px 20px / 300px 375px no-repeat url('demo-image/4.webp'), 
+        1240px 0 / 300px 375px no-repeat url('demo-image/5.webp'), 
+        1550px 20px / 300px 375px no-repeat url('demo-image/6.webp'), 
+        
+        0px 390px / 300px 375px no-repeat url('demo-image/4.webp'), 
+        310px 410px / 300px 375px no-repeat url('demo-image/5.webp'), 
+        620px 390px / 300px 375px no-repeat url('demo-image/1.webp'), 
+        930px 410px / 300px 375px no-repeat url('demo-image/6.webp'), 
+        1240px 390px / 300px 375px no-repeat url('demo-image/2.webp'), 
+        1550px 410px / 300px 375px no-repeat url('demo-image/3.webp'),
+       var(--fg);
+    
+    transform: scale(1.2) rotate(15deg);
     animation: scroll-bg 120s ease-out infinite;
     z-index: -1;
+    transform-box:border-box;
+    transform-origin: bottom;
 }
 
 @keyframes scroll-bg {
+    
     0% {
-        transform: translate(-10%,-20%) rotateX(-5deg) rotateZ(15deg)scale(1.1) ;
+        transform: scale(1.2) rotate(-17deg) translate(2%,-1%);
     }
-
+    
     50% {
-        transform: translate(-3%,-3%) rotateX(2deg) rotateZ(0deg) scale(1.4);
+        transform: scale(1.1) rotate(15deg) translate(8%,3%);
     }
-
+    
     100% {
-        transform: translate(-10%,-20%) rotateX(-5deg) rotateZ(15deg)scale(1.1);
-    }
+        transform: scale(1.2) rotate(-17deg) translate(2%,-1%);
+    }    
+
 }
 
 body {
@@ -248,7 +268,7 @@ input#search-input {
     display: none;
 }
 
-header svg, .item nav svg, .accordion dt svg {
+#datajson a svg, header svg, .item nav svg, .accordion dt svg {
     display: inline-flex;
     fill: var(--b6);
 }
@@ -400,7 +420,7 @@ input,textarea {
     height: 93vh;
 }
 
-.tcan {
+.InstantStyle {
     display : flex;
     width: 30%;
     flex-direction: column;
@@ -408,28 +428,28 @@ input,textarea {
     font-size: .9em;
 }
 
-.tcan p {
+.InstantStyle p {
     display: flex;
     margin: 0 0 .25rem 0;
 }
 
-.tcan p.submit {
+.InstantStyle p.submit {
     margin-top: 1rem;
 }
 
-.tcan label {
+.InstantStyle label {
     width: 50%;
     text-transform: capitalize;
 }
 
-.tcan input[type='color'] {
+.InstantStyle input[type='color'] {
     padding: 0;
     border: none;
     outline: none;
     margin: 0;
 }
 
-.tcan .submit {
+.InstantStyle .submit {
     width: 100%;
 }
 
@@ -506,7 +526,8 @@ select.naked options {
 .filebox a {
     padding: .125rem;
     width: 160px;
-    border: 1px solid var(--b5);
+    border: 1px solid var(--b3);
+    background: var(--pbg);
     text-decoration: none;
     display: inline-flex;
     align-items: center;
@@ -550,5 +571,8 @@ html body.rendered {
 
 button,input,select,textarea {
     background: var(--bg);
-    color: var(--b6);
+    color: var(--fg);
 }
+
+
+.ls25 {margin-left:25%;border-left:.5em solid var(--nbg);border-right:.5rem solid var(--nbg)}

@@ -10,8 +10,7 @@
 <script src='/ge2/js/tafunc.js'></script>
 <link rel="stylesheet" href="pb.css" type="text/css" media="all">
 <title>Prompimix B</title>
-<link rel="icon" type="image/x-icon" href="favicon.ico">
-<style id='InstantStyle'></style>
+<style id='tcanstyles'></style>
 </head>
 <body class='scrollable'>
 <div class='flex w100'>
@@ -26,7 +25,7 @@
 <button class='naked' data-content='datajson'>
 <i data-icon="feather-database"></i>
 </button>
-<button class='naked' data-content='setting' onclick='InstantStyle()'>
+<button class='naked' data-content='setting' onclick='tcan()'>
 <i data-icon="feather-sliders"></i>
 </button>
 </div>
@@ -66,7 +65,7 @@
 <span class='name line' contenteditable='true'>---</span>
 </div>
 <div class='flex middle'>
-<button class='naked twed' onclick="pb_textWeight(this)">
+<button class='naked twed' onclick="formatSelectedText(this)">
 <i data-icon='scale'></i>
 </button>    
 <button class='naked trim' onclick='pb_breaks(this)' title='clean'>
@@ -129,51 +128,47 @@ are Welcome, also image pasting.
 <h3 class='title'>JSON File</h3>
 </header>
 <div class='flex w100'>
-<div class='flex w50 top warp filebox'>
+<div class='flex w50 middle warp filebox'>
 <div>
 <i class='red x2' data-icon='feather-database'></i>
 </div>
 <div class='ml2 flex vertical'>
-<div class='mb2'><b>Prompts</b><br>Collection of prompts data</div>
+<b>Prompts</b>
 <div>
 <a href='javascript:prompt_save(true)'>
 <i data-icon="download"></i>
 Download
 </a>
-<a class='right' href='javascript:pjson_import("prompts")'>
+<a class='right' href='javascript:importJSON("prompts")'>
 Import<i data-icon="upload"></i>
 </a>
 </div>
 </div>
 </div>
-<div class='flex w50 top warp filebox'>
+<div class='flex w50 middle warp filebox'>
 <div>
 <i class='green x2' data-icon='feather-layout'></i>
 </div>
 <div class='ml2 flex vertical'>
-<div class='mb2'><b>Prompts</b><br>Your prompt worksheet.</div>
+<b>Workspace</b>
 <div>
 <a href='javascript:workspace_save(true)'>
 <i data-icon="download"></i>
 Download
 </a>
-<a class='right' href='javascript:pjson_import("workspace")'>
+<a class='right' href='javascript:importJSON("workspace")'>
 Import<i data-icon="upload"></i>
 </a>
 </div>
 </div>
 </div>
-</div>
-
-<div class='boxed ma'>
-<p>If you think something wrong, this button might usefull. <button class='reset' onclick='pbf_reset()'>Reset Your Data</button> and starting fresh.</p>
 </div>
 </div>
 <!--datajson-->
 <div id='setting' class='content hide' spellcheck="false">
 <header><h3 class='title'>Setting</h3></header>
 <div class='flex'>
-    <div class='InstantStyle'>
+    <div class='tcan'>
 <p>
 <label for="bg-input">background</label>
 <input type="color" id="bg-input" value="#223344">
@@ -271,7 +266,7 @@ Import<i data-icon="upload"></i>
 <div class="w100 mt4 flex warp">
 <div class="w100 vertical flex pr mb">
 <label for='promptfield'>prompt <small class="norm dim on-right">(doubeclick to rename/create new)</small></label>
-<input id='promptfield' type='text' onclick="pb_enableNew(this)" value='' name='prompt' readonly class='w100'>    
+<input id='promptfield' type='text' onclick="enable_new(this)" value='' name='prompt' readonly class='w100'>    
 </div>    
 <div class="w50 vertical flex pr">
 <label for='prefix'>prefix</label>
