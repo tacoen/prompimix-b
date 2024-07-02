@@ -39,8 +39,24 @@ class TaJSFunc {
             }
             return retArray.filter(this.uniq);
         }
-    };
-    notempty(w) {
+    }
+
+    ;stripHTMLTags(str) { return str.replace(/<[^>]+>/g, ''); }
+    
+    ;expandHexColor(hexColor) {
+
+        if (hexColor.length !== 3 || !hexColor.match(/^[0-9A-F]{3}$/i)) {
+            return hexColor;
+        }
+
+        let expandedColor = '';
+        for (let i = 0; i < hexColor.length; i++) {
+            expandedColor += hexColor[i] + hexColor[i];
+        }
+        return expandedColor.tolowerCase();
+    }
+
+    ;notempty(w) {
         if (typeof w !== 'undefined') {
             if (!w) {
                 return false;
@@ -48,12 +64,12 @@ class TaJSFunc {
             if (w === null) {
                 return false;
             }
-			if ((typeof w === 'object') && ( w !== {} )) {
-				return w;
-			}
-			if ((typeof w === 'array') && ( w !== [] )) {
-				return w;
-			}
+            if ((typeof w === 'object') && (w !== {})) {
+                return w;
+            }
+            if ((typeof w === 'array') && (w !== [])) {
+                return w;
+            }
             if ((typeof w === 'string') && (w.trim() !== '')) {
                 return w.trim()
             }
@@ -62,13 +78,11 @@ class TaJSFunc {
             return false;
         }
     }
-    ;
-    getrel(url) {
+    ;getrel(url) {
         var str = window.location.protocol + "\/\/" + window.location.hostname;
         return url.replace(str, "");
     }
-    ;
-    elementof(e) {
+    ;elementof(e) {
         if (typeof e == 'string') {
             e = document.querySelector(e)
         }
@@ -103,8 +117,7 @@ class TaJSFunc {
             // or throw the error
         }
     }
-    ;
-    json_submit(data, url='json.php') {
+    ;json_submit(data, url='json.php') {
         //console.log(data);
         return (async()=>{
             const rawResponse = await fetch(url + '?' + ta.ltm, {
@@ -122,7 +135,7 @@ class TaJSFunc {
         )();
     }
 
-    contentedit_json(id, chain=false) {
+    ;contentedit_json(id, chain=false) {
         var sre = ta.elementof(id);
         let data = {}
         sre.querySelectorAll('[contenteditable]').forEach((s)=>{
@@ -140,7 +153,7 @@ class TaJSFunc {
 
     }
 
-    attr_array(e) {
+    ;attr_array(e) {
         const aa = [...this.elementof(e).attributes];
         const attrs = aa.reduce((attrs,attribute)=>{
             attrs[attribute.name] = attribute.value;
@@ -151,36 +164,41 @@ class TaJSFunc {
     }
     ;/* localstorage */
     kukis = {
-        set: (w,v)=> {
+        set: (w,v)=>{
             if (this.kukis_store == null) {
                 this.kukis_store = {};
-            }            
+            }
             this.kukis_store[w] = JSON.stringify(v);
             localStorage.setItem('kukis', JSON.stringify(this.kukis_store));
-        },
+        }
+        ,
         remove: (w)=>{
             let data = this.kukis_store;
             delete data[w];
             localStorage.setItem('kukis', JSON.stringify(data));
-        },
+        }
+        ,
         get: (w)=>{
             let tres = ta.notempty(this.kukis_store[w]);
             return JSON.parse(tres);
         }
     }
-    ls = { 
+    
+    ;ls = {
         save: (w,v)=>{
             if (this.lsd == null) {
                 this.lsd = {};
             }
             this.lsd[w] = JSON.stringify(v);
             localStorage.setItem(this.host, JSON.stringify(this.lsd));
-        },
+        }
+        ,
         remove: (w)=>{
             data = this.lsd;
             delete data[w];
             localStorage.setItem(this.host, JSON.stringify(data));
-        },
+        }
+        ,
         get: (w)=>{
             let tres = ta.notempty(this.lsd[w]);
             return JSON.parse(tres);
@@ -188,26 +206,27 @@ class TaJSFunc {
     };
     is_elementExists(obj) {
         return document.querySelector(obj) !== null;
-    };
-	sortElements(parentSelector, childSelector, sortBy, isAttribute) {
-		// Get all the child elements within the parent
-		const childElements = document.querySelectorAll(parentSelector + " " + childSelector);
-		
-		// Convert the NodeList to an array for sorting
-		const childElementsArray = Array.from(childElements);
-		
-		// Sort the array based on the dataset or attribute values
-		childElementsArray.sort((a, b) => {
-			let aValue, bValue;
-			if (isAttribute) {
-				aValue = parseFloat(a.getAttribute(sortBy));
-				bValue = parseFloat(b.getAttribute(sortBy));
-			} else {
-				aValue = parseFloat(a.dataset[sortBy]);
-				bValue = parseFloat(b.dataset[sortBy]);
-			}
-			return aValue - bValue;
-		});
+    }
+    ;sortElements(parentSelector, childSelector, sortBy, isAttribute) {
+        // Get all the child elements within the parent
+        const childElements = document.querySelectorAll(parentSelector + " " + childSelector);
+
+        // Convert the NodeList to an array for sorting
+        const childElementsArray = Array.from(childElements);
+
+        // Sort the array based on the dataset or attribute values
+        childElementsArray.sort((a,b)=>{
+            let aValue, bValue;
+            if (isAttribute) {
+                aValue = parseFloat(a.getAttribute(sortBy));
+                bValue = parseFloat(b.getAttribute(sortBy));
+            } else {
+                aValue = parseFloat(a.dataset[sortBy]);
+                bValue = parseFloat(b.dataset[sortBy]);
+            }
+            return aValue - bValue;
+        }
+        );
     }
 }
 /* eof tajsfunc */
@@ -258,31 +277,31 @@ class TaUIFunc extends TaJSFunc {
             );
         }
     };
-    
+
     theme_switch(usecookies=false) {
-        
-		var h = document.getElementsByTagName('html')[0];
-		
+
+        var h = document.getElementsByTagName('html')[0];
+
         if (usecookies === true) {
-            
-			var t = ta.notempty( ta.kukis.get('theme') )
+
+            var t = ta.notempty(ta.kukis.get('theme'))
             h.setAttribute('theme', t)
-            
-		} else {
-            
-			var t = h.getAttribute('theme') || false
+
+        } else {
+
+            var t = h.getAttribute('theme') || false
 
             if (t == 'dark') {
                 h.setAttribute('theme', 'light')
-    			ta.kukis.remove('theme')
+                ta.kukis.remove('theme')
                 //this.class.remove(obj,'dark')
             } else {
                 h.setAttribute('theme', 'dark')
-    			ta.kukis.set('theme','dark')
+                ta.kukis.set('theme', 'dark')
             }
-            
-		}
-		
+
+        }
+
     }
     ;htmlpart(w) {
         return document.querySelector('#htmlpart [index="' + w + '"').innerHTML || "<!-- hp: " + w + "-->";
@@ -312,7 +331,7 @@ class TaUIFunc extends TaJSFunc {
                 tocItem.classList.add('toc_' + heading.tagName.toLowerCase());
                 const tocLink = document.createElement('a');
                 const headingId = this.generateHeadingId(heading);
-                tocLink.href = "#"+ headingId.replace(/\W/g, '');
+                tocLink.href = "#" + headingId.replace(/\W/g, '');
                 tocLink.textContent = heading.textContent;
                 tocItem.appendChild(tocLink);
                 tocList.appendChild(tocItem);
@@ -326,51 +345,51 @@ class TaUIFunc extends TaJSFunc {
         var nid = heading.id
         if ((nid === null) || (nid == "")) {
             var nid = `heading-${Array.from(heading.parentElement.children).indexOf(heading) + 1}`;
-           console.log(nid);
-			heading.id = nid.replace(/\W/g, '');
+            console.log(nid);
+            heading.id = nid.replace(/\W/g, '');
         }
         return nid;
     }
 }
-;
-let ta = new TaUIFunc();
+;let ta = new TaUIFunc();
 
 class taLoad extends TaUIFunc {
 
-	tabmenu() {
+    tabmenu() {
 
-		document.querySelectorAll('.tab-menu .tab').forEach ( 
-			(tab) => {
-			tab.addEventListener('click',(e) => {
-				var target = tab.dataset.tab;
-				var te = document.querySelector('#'+target);
-				document.querySelectorAll('.tab-menu .tab').forEach( (d) => {
-					ta.class.remove(d,'active');
-				});				
-				document.querySelectorAll('.tab-content div.tab').forEach( (d) => {
-					ta.class.remove(d,'show');
-				});				
-				//console.log(te);
-				ta.class.add(te,'show');
-				ta.class.add(tab,'active');
-			})
+        document.querySelectorAll('.tab-menu .tab').forEach((tab)=>{
+            tab.addEventListener('click', (e)=>{
+                var target = tab.dataset.tab;
+                var te = document.querySelector('#' + target);
+                document.querySelectorAll('.tab-menu .tab').forEach((d)=>{
+                    ta.class.remove(d, 'active');
+                }
+                );
+                document.querySelectorAll('.tab-content div.tab').forEach((d)=>{
+                    ta.class.remove(d, 'show');
+                }
+                );
+                //console.log(te);
+                ta.class.add(te, 'show');
+                ta.class.add(tab, 'active');
+            }
+            )
 
-			}
-		);
+        }
+        );
 
-	
-	};
-	
+    }
+    ;
     modal() {
         document.querySelectorAll('[data-modal]').forEach((el)=>{
             el.addEventListener('click', async(e)=>{
                 var part = el.dataset.modal;
                 var overlay = document.getElementById('overlay');
                 ta.class.toggle(overlay, 'active');
-				console.log(part);
+                console.log(part);
                 var htmlpart = document.querySelector('#htmlpart [modal="' + part + '"').cloneNode(true);
                 var closebtn = htmlpart.querySelector('button.closer');
-				htmlpart.removeAttribute('modal');
+                htmlpart.removeAttribute('modal');
                 closebtn.addEventListener('click', ()=>{
                     htmlpart.remove();
                     ta.class.toggle(overlay, 'active');
@@ -382,8 +401,8 @@ class taLoad extends TaUIFunc {
             );
         }
         );
-    };
-    toggle() {
+    }
+    ;toggle() {
         document.querySelectorAll('[data-toggle]').forEach((el)=>{
             el.addEventListener('click', async(e)=>{
                 var obj = el.dataset.toggle;
@@ -400,8 +419,8 @@ class taLoad extends TaUIFunc {
             );
         }
         );
-    };
-    scrollfix() {
+    }
+    ;scrollfix() {
         if (ta.is_elementExists('nav[topnav]')) {
             document.querySelectorAll('a[href^="#"]').forEach(anchor=>{
                 anchor.addEventListener('click', event=>{
@@ -420,8 +439,8 @@ class taLoad extends TaUIFunc {
             }
             );
         }
-    };
-    accordion2() {
+    }
+    ;accordion2() {
         document.querySelectorAll('dl.accordion > dt').forEach((el)=>{
             el.addEventListener('click', async(e)=>{
                 ta.class.toggle(el, 'open')
@@ -429,32 +448,32 @@ class taLoad extends TaUIFunc {
             )
         }
         )
-    };
-    accordion(et=false) {
-		if (et) {
-			var tq = 'dl.accordion > dt '+et;
-		} else {
-			var tq = 'dl.accordion > dt';
-		}
-		// console.log(tq);
+    }
+    ;accordion(et=false) {
+        if (et) {
+            var tq = 'dl.accordion > dt ' + et;
+        } else {
+            var tq = 'dl.accordion > dt';
+        }
+        // console.log(tq);
         document.querySelectorAll(tq).forEach((el)=>{
             el.addEventListener('click', async(e)=>{
-				const dt = el.closest('dt');
+                const dt = el.closest('dt');
                 ta.class.toggle(dt, 'open')
             }
             )
         }
         )
-    };
-    markdown() {
+    }
+    ;markdown() {
         // ../js/marked.min.js
         document.querySelectorAll('[markdown]').forEach((el)=>{
             var mdtext = el.innerHTML;
             el.innerHTML = marked.parse(mdtext)
         }
         );
-    };
-    drawer() {
+    }
+    ;drawer() {
 
         document.querySelectorAll('html .drawer').forEach((bel)=>{
 
@@ -464,7 +483,8 @@ class taLoad extends TaUIFunc {
             })
         }
         );
-    };
+    }
+    ;
 
 }
 ;let ena = new taLoad();
@@ -476,9 +496,9 @@ document.addEventListener("DOMContentLoaded", function() {
     ena.scrollfix();
 
     ena.drawer();
-	ena.accordion('b')
-	ena.tabmenu();
+    ena.accordion('b')
+    ena.tabmenu();
 
-	ta.mediaWidth();
-	
+    ta.mediaWidth();
+
 });

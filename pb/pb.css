@@ -14,7 +14,23 @@
     --wshade: #f1f1f1;
 }
 
+#landing > * { color: var(--fg); }
+
 .background-tiles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 150%;
+    height: 150%;
+    z-index: -1;
+    background: var(--bg);
+}
+
+.background-tiles > .mbgr {
+    z-index: -1;
+    --w: 300;
+    --h: 375;
+    --s: 10;
     opacity: .2;
     position: fixed;
     top: 0;
@@ -22,24 +38,25 @@
     width: 150%;
     height: 150%;
     background: 
-        0px 0 / 300px 375px no-repeat url('demo-image/1.webp'), 
-        310px 20px / 300px 375px no-repeat url('demo-image/2.webp'), 
-        620px 0 / 300px 375px no-repeat url('demo-image/3.webp'), 
-        930px 20px / 300px 375px no-repeat url('demo-image/4.webp'), 
-        1240px 0 / 300px 375px no-repeat url('demo-image/5.webp'), 
-        1550px 20px / 300px 375px no-repeat url('demo-image/6.webp'), 
-        
-        0px 390px / 300px 375px no-repeat url('demo-image/4.webp'), 
-        310px 410px / 300px 375px no-repeat url('demo-image/5.webp'), 
-        620px 390px / 300px 375px no-repeat url('demo-image/1.webp'), 
-        930px 410px / 300px 375px no-repeat url('demo-image/6.webp'), 
-        1240px 390px / 300px 375px no-repeat url('demo-image/2.webp'), 
-        1550px 410px / 300px 375px no-repeat url('demo-image/3.webp'),
-       var(--fg);
+
+0px 0px /300px 375px no-repeat url('demo-image/1.webp'),
+310px 10px /300px 375px no-repeat url('demo-image/2.webp'), 
+620px 0px /300px 375px no-repeat url('demo-image/3.webp'),
+930px 10px /300px 375px no-repeat url('demo-image/4.webp'), 
+1240px 0px /300px 375px no-repeat url('demo-image/5.webp'), 
+1550px 10px /300px 375px no-repeat url('demo-image/6.webp'), 
+
+0px 385px /300px 375px no-repeat url('demo-image/5.webp'),
+310px 395px /300px 375px no-repeat url('demo-image/4.webp'),
+620px 385px /300px 375px no-repeat url('demo-image/6.webp'),
+930px 395px /300px 375px no-repeat url('demo-image/1.webp'),
+1240px 385px /300px 375px no-repeat url('demo-image/2.webp'),
+1550px 395px /300px 375px no-repeat url('demo-image/3.webp'),
+
+
+       var(--bg);
     
-    transform: scale(1.2) rotate(15deg);
     animation: scroll-bg 120s ease-out infinite;
-    z-index: -1;
     transform-box:border-box;
     transform-origin: bottom;
 }
@@ -47,15 +64,19 @@
 @keyframes scroll-bg {
     
     0% {
-        transform: scale(1.2) rotate(-17deg) translate(2%,-1%);
+        transform: scale(1.2) translate(0%,8%) rotate(5deg);
     }
     
     50% {
-        transform: scale(1.1) rotate(15deg) translate(8%,3%);
+        transform: scale(1.3) translate(8%,8%) rotate(3deg);
     }
-    
+
+    75% {
+        transform: scale(1.2) translate(-2%,8%)  rotate(5deg);
+    }    
+
     100% {
-        transform: scale(1.2) rotate(-17deg) translate(2%,-1%);
+        transform: scale(1.2) translate(0%,8%)  rotate(5deg);
     }    
 
 }
@@ -158,6 +179,7 @@ dt b {
     height: 40px;
 }
 
+#prompts .h1,
 #prompts h1 {
     margin: 0;
     font-weight: 600;
@@ -574,5 +596,15 @@ button,input,select,textarea {
     color: var(--fg);
 }
 
+.notice-pop {
+position: fixed;
+    background: var(--bshade);
+    color: var(--wshade);
+    padding: 3px 2rem 3px .5rem;
+    z-index:9;
+    bottom: 0; left: 0;
+    font-size: .7em;
+    
+}
 
 .ls25 {margin-left:25%;border-left:.5em solid var(--nbg);border-right:.5rem solid var(--nbg)}

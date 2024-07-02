@@ -18,7 +18,7 @@
 <div id='prompts' class='w25 fix top left transfer maxheight'>
 <header class='flex vertical w25 fix top left'>
 <div class='tools pl flex between middle w100 grow'>
-<h1 onclick='location.reload()'>Prompimix</h1>
+<button class='naked h1' data-content='landing'>Prompimix</button>
 <div>
 <button class='naked' data-content='workspace'>
 <i data-icon="feather-layout"></i>
@@ -165,9 +165,11 @@ Import<i data-icon="upload"></i>
 </div>
 </div>
 
-<div class='boxed ma'>
-<p>If you think something wrong, this button might usefull. <button class='reset' onclick='pbf_reset()'>Reset Your Data</button> and starting fresh.</p>
+<div class='boxed ma fix bottom ge2-adjust-innerwidth'>
+<p>If you think something wrong, this button might usefull. 
+    <button class='reset' onclick='pbf_reset()'>Reset Your Data</button> and starting fresh.</p>
 </div>
+
 </div>
 <!--datajson-->
 <div id='setting' class='content hide' spellcheck="false">
@@ -308,6 +310,5 @@ Import<i data-icon="upload"></i>
 </div>
 <div id='overlay'></div>
 </body>
-<script src='pbv.js'></script>
 <script src='pb.js'></script>
 </html>

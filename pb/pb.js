@@ -15,7 +15,6 @@ function uniqueAssignID(htmlString) {
     }
     );
 }
-
 async function pjson_uploadphp(data, filename='prompt') {
     try {
         const formData = new FormData();
@@ -79,8 +78,6 @@ function pjson_mergedata(dataType, jsonData) {
     };
     localStorage.setItem(ta.host, JSON.stringify(DATA))
 }
-
-
 function pb_clipboardCopy(text) {
     var tempTextArea = document.createElement("textarea");
     tempTextArea.value = text;
@@ -89,6 +86,13 @@ function pb_clipboardCopy(text) {
     tempTextArea.setSelectionRange(0, 99999);
     document.execCommand("copy");
     document.body.removeChild(tempTextArea);
+}
+function pbf_reset() {
+    let lsd = {};
+    lsd['workspace'] = { 'default': {'maker':{}, 'negative': {} },  };
+    lsd['prompts'] = { 'basic': { 'items':['photo','illustration'] }};
+    localStorage.setItem(ta.host, JSON.stringify(lsd));
+    window.location.reload();    
 }
 function pb_load(obj) {
     let project = obj.value.toLowerCase();
@@ -107,7 +111,7 @@ function pb_load(obj) {
     } else {
         project = obj.value
     }
-    console.log('new2', project, obj.value)
+    //console.log('new2', project, obj.value)
     obj.value = project;
     workspace_load(project);
 }
@@ -271,10 +275,22 @@ function pb_save(obj) {
         lsd['workspace'][name]['notes'] = note_text
     }
     lsd['workspace']
-    console.log(lsd);
-    console.log(lsd);
+    //console.log(lsd);
     localStorage.setItem(ta.host, JSON.stringify(lsd));
-    pb_btnnotice(obj);
+    if (obj) {
+        pb_btnnotice(obj);
+    } else {
+        pb_popnotice('localStorage saved...')
+    }
+}
+function pb_popnotice(msg='Bo!') {
+         var noted = document.createElement('div');
+        noted.className = 'notice-pop'
+        noted.innerHTML= msg
+        document.body.appendChild(noted)
+        setTimeout(function() {
+            noted.remove();
+        }, 750);   
 }
 function pb_search(event) {
     if (event.target.value.length >= 2) {
@@ -344,7 +360,6 @@ function pb_textWeight(btn) {
         contentEditable.innerHTML = newContent;
     }
 }
-
 function InstantStyle() {
     const root = document.documentElement;
     const cssstyle = document.getElementById('InstantStyle');
@@ -370,6 +385,7 @@ function InstantStyle() {
     InstantStyle_update(colorInputs);
     saveThemeButton.addEventListener('click', ()=>{
         InstantStyle_save();
+        pb_popnotice('Color saved...')
     }
     );
 }
@@ -393,7 +409,6 @@ function InstantStyle_load() {
     const cssstyle = document.getElementById('InstantStyle');
     cssstyle.textContent = themeData
 }
-
 function prompt_load(lsd) {
     const d = document.createElement('div');
     d.id = 'data';
@@ -458,15 +473,15 @@ function prompt_htmlObject(hS) {
     }
     return sO;
 }
-
 function workspace_save(download=false) {
     data = ta.lsd
-    console.log(data);
+    //console.log(data);
     let workspace_data = data['workspace']
     console.log(workspace_data);
     if (download) {
         pjson_download(workspace_data, 'workspace')
     }
+    pb_popnotice('workspace saved...')
 }
 function workspace_load(project) {
     lsd = ta.lsd
@@ -475,10 +490,7 @@ function workspace_load(project) {
     workspace_load_continue(project,projects);      
   } catch (error) {
     if (error instanceof TypeError && lsd['workspace'] === undefined) {
-      lsd['workspace'] = { 'default': {'maker':{}, 'negative': {} },  };
-      lsd['prompts'] = { 'basic': { 'items':['photo','illustration'] }};
-      localStorage.setItem(ta.host, JSON.stringify(lsd));
-      window.location.reload();
+      pb_reset();
       const projects = Object.keys(lsd['workspace']).sort();  
       workspace_load_continue(project,projects);
     } else {
@@ -529,9 +541,9 @@ function workspace_load_continue(project,projects=false) {
         );
         document.querySelector('#notes .text').innerHTML = workspace_data['notes'] || "";
         document.title = "Prompimix: "+ project;
+        pb_popnotice( project+' loaded...')
     }
 }
-
 function pbf_dtbar() {
     var div = document.createElement('div');
     var btn1 = document.createElement('button');
@@ -654,11 +666,17 @@ function pbf_workspace_collectdata(where) {
     );
     return d
 }
-function pbf_maincontent_selector() {
+function pbf_maincontent_selector(page) {
     function fin() {
-       document.body.classList.add('rendered')
+       document.body.classList.add('rendered');
+       setInterval(function () { pb_save(false) }, (1000*60*5));
     }
     ta.fetch('#landing.content',null,fin());
+    if (page) {
+        document.querySelector('main #landing.content').classList.add('hide');
+        document.querySelector('button[data-content="'+page+'"').classList.add('active');
+        document.querySelector('main #'+page+'.content').classList.remove('hide');
+    }
     document.querySelectorAll('button[data-content]').forEach(b=>{
         b.addEventListener('click', ()=>{
             document.querySelectorAll('button[data-content]').forEach(b=>{
@@ -674,6 +692,8 @@ function pbf_maincontent_selector() {
             var c = main.querySelector('#' + t + ".content")
             c.classList.toggle('hide');
             ta.class.toggle(b, 'active');
+            ta.kukis.set('page',t)
+            ena.ge2Adjust();
         }
         );
     }
@@ -694,7 +714,6 @@ function pbf_init() {
     workspace.querySelector('#negative .new').id = ncur_id
     var project = nav.querySelector('select[name="project"]').value || 'default';
     workspace_load(project);
-    console.log('pb.js');
 }
 document.addEventListener('DOMContentLoaded', ()=>{
     pbf_init();
@@ -705,9 +724,11 @@ document.addEventListener('DOMContentLoaded', ()=>{
         entryElement.dataset.position = cursorPosition;
     }
     );
-    pbf_maincontent_selector();
+    let page = ta.kukis.get('page') || false;
+    pbf_maincontent_selector(page);
     pbf_licanclick();
     taicon.delay();
-    ena.accordion('b')
+    ena.accordion('b');
+    ena.ge2Adjust();
 }
 );

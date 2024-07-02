@@ -216,7 +216,7 @@ function taiconmu_jsfunc() {
             attrs = '" width="480px" height="480px" viewBox="0 0 480 480">';
         }
 
-        var classs = "taicomu " + id + " " + classes
+        var classs = "taicon " + id + " " + classes
         return '<svg class="' + classs.trim() + attrs + paths + '</svg>';
 
     }
