@@ -490,7 +490,7 @@ function workspace_load(project) {
     workspace_load_continue(project,projects);      
   } catch (error) {
     if (error instanceof TypeError && lsd['workspace'] === undefined) {
-      pb_reset();
+      pbf_reset();
       const projects = Object.keys(lsd['workspace']).sort();  
       workspace_load_continue(project,projects);
     } else {
