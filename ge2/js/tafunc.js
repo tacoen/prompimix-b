@@ -1,5 +1,4 @@
 function dummy() {}
-
 class TaJSFunc {
     constructor() {
         this.version = "0.1a";
@@ -8,7 +7,6 @@ class TaJSFunc {
         this.lsd = JSON.parse(localStorage.getItem(this.host)) || {};
         this.kukis_store = JSON.parse(localStorage.getItem("kukis")) || {};
     }
-
     ;rndtext() {
         const rc = ['0123456789', 'aeiou', 'bcdfghjklmnpqrstvwxyz'];
         return (rc[2][Math.floor(Math.random() * rc[2].length)] + rc[1][Math.floor(Math.random() * rc[1].length)] + rc[2][Math.floor(Math.random() * rc[2].length)] + rc[1][Math.floor(Math.random() * rc[1].length)] + rc[0][Math.floor(Math.random() * rc[0].length)] + rc[0][Math.floor(Math.random() * rc[0].length)]);
@@ -40,22 +38,17 @@ class TaJSFunc {
             return retArray.filter(this.uniq);
         }
     }
-
     ;stripHTMLTags(str) { return str.replace(/<[^>]+>/g, ''); }
-    
     ;expandHexColor(hexColor) {
-
         if (hexColor.length !== 3 || !hexColor.match(/^[0-9A-F]{3}$/i)) {
             return hexColor;
         }
-
         let expandedColor = '';
         for (let i = 0; i < hexColor.length; i++) {
             expandedColor += hexColor[i] + hexColor[i];
         }
         return expandedColor.tolowerCase();
     }
-
     ;notempty(w) {
         if (typeof w !== 'undefined') {
             if (!w) {
@@ -134,7 +127,6 @@ class TaJSFunc {
         }
         )();
     }
-
     ;contentedit_json(id, chain=false) {
         var sre = ta.elementof(id);
         let data = {}
@@ -148,11 +140,8 @@ class TaJSFunc {
             data[el_name] = s.innerHTML;
         }
         );
-
         this.json_submit(data, sre.dataset.post);
-
     }
-
     ;attr_array(e) {
         const aa = [...this.elementof(e).attributes];
         const attrs = aa.reduce((attrs,attribute)=>{
@@ -183,7 +172,6 @@ class TaJSFunc {
             return JSON.parse(tres);
         }
     }
-    
     ;ls = {
         save: (w,v)=>{
             if (this.lsd == null) {
@@ -210,10 +198,8 @@ class TaJSFunc {
     ;sortElements(parentSelector, childSelector, sortBy, isAttribute) {
         // Get all the child elements within the parent
         const childElements = document.querySelectorAll(parentSelector + " " + childSelector);
-
         // Convert the NodeList to an array for sorting
         const childElementsArray = Array.from(childElements);
-
         // Sort the array based on the dataset or attribute values
         childElementsArray.sort((a,b)=>{
             let aValue, bValue;
@@ -277,20 +263,13 @@ class TaUIFunc extends TaJSFunc {
             );
         }
     };
-
     theme_switch(usecookies=false) {
-
         var h = document.getElementsByTagName('html')[0];
-
         if (usecookies === true) {
-
             var t = ta.notempty(ta.kukis.get('theme'))
             h.setAttribute('theme', t)
-
         } else {
-
             var t = h.getAttribute('theme') || false
-
             if (t == 'dark') {
                 h.setAttribute('theme', 'light')
                 ta.kukis.remove('theme')
@@ -299,9 +278,7 @@ class TaUIFunc extends TaJSFunc {
                 h.setAttribute('theme', 'dark')
                 ta.kukis.set('theme', 'dark')
             }
-
         }
-
     }
     ;htmlpart(w) {
         return document.querySelector('#htmlpart [index="' + w + '"').innerHTML || "<!-- hp: " + w + "-->";
@@ -317,7 +294,6 @@ class TaUIFunc extends TaJSFunc {
             body.classList.add('large-screen');
         }
     }
-
     generateTOC(from='.tocindex', ele='#toc .toc', query='h2,h3') {
         const maine = document.querySelector(from);
         const headings = maine.querySelectorAll(query);
@@ -352,11 +328,15 @@ class TaUIFunc extends TaJSFunc {
     }
 }
 ;let ta = new TaUIFunc();
-
 class taLoad extends TaUIFunc {
-
+    ge2Adjust() {
+        document.querySelectorAll('div.ge2-adjust-innerwidth').forEach( obj =>{
+            var w = obj.computedStyleMap().get('padding-right').value + obj.computedStyleMap().get('padding-left').value;
+            var pw = obj.parentElement.offsetWidth;
+            obj.style.width = pw - w +"px";
+        });        
+    };
     tabmenu() {
-
         document.querySelectorAll('.tab-menu .tab').forEach((tab)=>{
             tab.addEventListener('click', (e)=>{
                 var target = tab.dataset.tab;
@@ -374,12 +354,9 @@ class taLoad extends TaUIFunc {
                 ta.class.add(tab, 'active');
             }
             )
-
         }
         );
-
-    }
-    ;
+    };
     modal() {
         document.querySelectorAll('[data-modal]').forEach((el)=>{
             el.addEventListener('click', async(e)=>{
@@ -474,31 +451,24 @@ class taLoad extends TaUIFunc {
         );
     }
     ;drawer() {
-
         document.querySelectorAll('html .drawer').forEach((bel)=>{
-
             bel.addEventListener('dblclick', function(e) {
                 ta.class.toggle(bel, 'active');
-
             })
         }
         );
     }
     ;
-
 }
 ;let ena = new taLoad();
 
 document.addEventListener("DOMContentLoaded", function() {
-
     ena.modal();
     ena.toggle();
     ena.scrollfix();
-
     ena.drawer();
     ena.accordion('b')
     ena.tabmenu();
-
+    ena.ge2Adjust();
     ta.mediaWidth();
-
 });

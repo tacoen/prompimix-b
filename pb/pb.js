@@ -88,11 +88,16 @@ function pb_clipboardCopy(text) {
     document.body.removeChild(tempTextArea);
 }
 function pbf_reset() {
+    
     let lsd = {};
     lsd['workspace'] = { 'default': {'maker':{}, 'negative': {} },  };
     lsd['prompts'] = { 'basic': { 'items':['photo','illustration'] }};
     localStorage.setItem(ta.host, JSON.stringify(lsd));
-    window.location.reload();    
+    document.body.className ="pa2";
+    document.body.innerHTML = '<h1>Initial Load</h1>'+
+        '<p>Please reload/refresh this page. or <a href="javascript:window.location.reload();">click here</a>.</p>';
+    
+     
 }
 function pb_load(obj) {
     let project = obj.value.toLowerCase();
@@ -120,7 +125,7 @@ function pb_randomize(obj) {
     var lis = obj.closest('dl').querySelectorAll('dd ul li');
     var randomIndex = Math.floor(Math.random() * lis.length);
     var liText = lis[randomIndex].textContent;
-    console.log(liText);
+    //console.log(liText);
     pbf_LiClickhandle(obj, liText);
 }
 function pb_editForm(obj) {
@@ -484,13 +489,13 @@ function workspace_save(download=false) {
     pb_popnotice('workspace saved...')
 }
 function workspace_load(project) {
-    lsd = ta.lsd
+  lsd = ta.lsd
   try {
     const projects = Object.keys(lsd['workspace']).sort();
     workspace_load_continue(project,projects);      
   } catch (error) {
     if (error instanceof TypeError && lsd['workspace'] === undefined) {
-      pb_reset();
+      pbf_reset();
       const projects = Object.keys(lsd['workspace']).sort();  
       workspace_load_continue(project,projects);
     } else {
@@ -703,6 +708,7 @@ function pbf_init() {
     let lsd = ta.lsd;
     document.getElementById('prompts').appendChild(prompt_load(lsd));
     document.getElementById('search-input').addEventListener('keydown', pb_search);
+    document.getElementById('search-input').addEventListener('change', pb_search);
     InstantStyle_load();
     let workspace = document.getElementById('workspace');
     let nav = document.getElementById('pb');
